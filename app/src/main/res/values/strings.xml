@@ -4,4 +4,6 @@
     <string name="no_face_detected">No face detected.</string>
     <string name="an_error_occurred_during_analysis">An error occurred during analysis: %1$s</string>
     <string name="mood">Mood: %1$s</string>
+    <string name="select_photo_from_gallery">Select Photo from Gallery</string>
+    <string name="your_image">Your Image</string>
 </resources>

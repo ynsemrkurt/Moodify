@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
 
         val mood = when {
-            smilingProb > 0.5f -> HAPPY
+            smilingProb > 0.6f -> HAPPY
             smilingProb < 0.3f -> SAD
             leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> TIRED
             else -> NEUTRAL

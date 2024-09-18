@@ -11,28 +11,29 @@
         android:id="@+id/moodTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacer_32"
+        android:text="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_marginHorizontal="64dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_centerInParent="true"
+        android:layout_marginVertical="@dimen/spacer_64"
+        app:layout_constraintBottom_toTopOf="@+id/selectPhotoButton"
         app:layout_constraintDimensionRatio="9:16"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toBottomOf="@+id/moodTextView">
 
         <ImageView
             android:id="@+id/imageView"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="image" />
+            android:background="@color/black"
+            android:contentDescription="@string/your_image"
+            android:scaleType="centerCrop" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -41,8 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:text="Galeriden Fotoğraf Seç"
+        android:layout_marginBottom="@dimen/spacer_32"
+        android:text="@string/select_photo_from_gallery"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
