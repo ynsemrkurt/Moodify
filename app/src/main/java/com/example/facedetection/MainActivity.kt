@@ -3,7 +3,6 @@ package com.example.facedetection
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var moodTextView: TextView
     private lateinit var imageView: ImageView
 
-    // Photo picker contract'ını onCreate() içinde bir kez tanımlıyoruz
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
         if (uri != null) {
             imageView.setImageURI(uri)
@@ -47,10 +45,8 @@ class MainActivity : AppCompatActivity() {
 
         selectPhotoButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // SDK 33 ve üzeri için Photo Picker
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             } else {
-                // Android 12 ve öncesi için depolama izni kontrolü
                 if (ContextCompat.checkSelfPermission(
                         this,
                         Manifest.permission.READ_EXTERNAL_STORAGE
@@ -68,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Android 12 ve öncesi için galeriyi aç
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 102)
@@ -86,14 +81,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Seçilen fotoğrafı analiz et
     private fun analyzeSelectedImage(imageUri: Uri) {
         try {
-            // Fotoğrafı bitmap formatında al ve InputImage formatına çevir
             val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
             val image = InputImage.fromBitmap(bitmap, 0)
 
-            // Yüz algılama ayarları
             val options = FaceDetectorOptions.Builder()
                 .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
                 .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
@@ -101,11 +93,9 @@ class MainActivity : AppCompatActivity() {
 
             val detector = FaceDetection.getClient(options)
 
-            // Yüz algılamayı başlat
             detector.process(image)
                 .addOnSuccessListener { faces ->
                     if (faces.isNotEmpty()) {
-                        // Yüzlerin analizini yap
                         for (face in faces) {
                             analyzeFace(face)
                         }
@@ -122,7 +112,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Yüzün analizini yap ve ruh halini tespit et
     private fun analyzeFace(face: Face) {
         val smilingProb = face.smilingProbability ?: 0.0f
         val leftEyeOpenProb = face.leftEyeOpenProbability ?: 0.0f
@@ -135,7 +124,6 @@ class MainActivity : AppCompatActivity() {
             else -> "Nötr"
         }
 
-        // Ruh hali sonucunu ekranda göster
         runOnUiThread {
             moodTextView.text = "Ruh Hali: $mood"
         }
