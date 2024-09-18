@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Face Detection</string>
+    <string name="no_photo_selected">No photo selected.</string>
+    <string name="no_face_detected">No face detected.</string>
+    <string name="an_error_occurred_during_analysis">An error occurred during analysis: %1$s</string>
+    <string name="mood">Mood: %1$s</string>
 </resources>

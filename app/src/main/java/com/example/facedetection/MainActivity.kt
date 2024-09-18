@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,8 +30,15 @@ class MainActivity : AppCompatActivity() {
             imageView.setImageURI(uri)
             analyzeSelectedImage(uri)
         } else {
-            moodTextView.text = "Fotoğraf seçilmedi."
+            moodTextView.text = getString(R.string.no_photo_selected)
         }
+    }
+
+    companion object{
+        const val HAPPY = "Happy"
+        const val SAD = "Sad"
+        const val TIRED = "Tired"
+        const val NEUTRAL = "Neutral"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,12 +106,12 @@ class MainActivity : AppCompatActivity() {
                             analyzeFace(face)
                         }
                     } else {
-                        moodTextView.text = "Yüz algılanmadı."
+                        moodTextView.text = getString(R.string.no_face_detected)
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("FaceDetection", "Yüz algılama başarısız oldu", e)
-                    moodTextView.text = "Analiz sırasında hata oluştu."
+                    moodTextView.text =
+                        getString(R.string.an_error_occurred_during_analysis, e.message)
                 }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -118,14 +124,14 @@ class MainActivity : AppCompatActivity() {
         val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
 
         val mood = when {
-            smilingProb > 0.5f -> "Mutlu"
-            smilingProb < 0.3f -> "Üzgün"
-            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> "Yorgun"
-            else -> "Nötr"
+            smilingProb > 0.5f -> HAPPY
+            smilingProb < 0.3f -> SAD
+            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> TIRED
+            else -> NEUTRAL
         }
 
         runOnUiThread {
-            moodTextView.text = "Ruh Hali: $mood"
+            moodTextView.text = getString(R.string.mood, mood)
         }
     }
 }
