@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,22 +20,26 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var moodTextView: TextView
     private lateinit var imageView: ImageView
+    private var loadingDialog: AlertDialog? = null
+    private val executor = Executors.newSingleThreadExecutor()
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
         if (uri != null) {
             imageView.setImageURI(uri)
+            showLoadingDialog()
             analyzeSelectedImage(uri)
         } else {
             moodTextView.text = getString(R.string.no_photo_selected)
         }
     }
 
-    companion object{
+    companion object {
         const val HAPPY = "Happy"
         const val SAD = "Sad"
         const val TIRED = "Tired"
@@ -82,7 +87,22 @@ class MainActivity : AppCompatActivity() {
             val imageUri: Uri? = data?.data
             if (imageUri != null) {
                 imageView.setImageURI(imageUri)
+                showLoadingDialog()
                 analyzeSelectedImage(imageUri)
+            }
+        }
+    }
+
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.loading_dialog, null)
+        builder.setView(dialogView)
+        loadingDialog = builder.create()
+        loadingDialog?.show()
+        executor.execute {
+            Thread.sleep(5000)
+            runOnUiThread {
+                loadingDialog?.dismiss()
             }
         }
     }
@@ -110,8 +130,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    moodTextView.text =
-                        getString(R.string.an_error_occurred_during_analysis, e.message)
+                    moodTextView.text = getString(R.string.an_error_occurred_during_analysis, e.message)
                 }
         } catch (e: Exception) {
             e.printStackTrace()
