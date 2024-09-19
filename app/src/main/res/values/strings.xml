@@ -8,4 +8,5 @@
     <string name="your_image">Your Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_with">Login with</string>
 </resources>

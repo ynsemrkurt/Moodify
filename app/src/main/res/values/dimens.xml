@@ -3,4 +3,7 @@
     <dimen name="spacer_64">64dp</dimen>
     <dimen name="spacer_32">32dp</dimen>
     <dimen name="spacer_16">16dp</dimen>
+    <dimen name="spacer_24">24dp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="spacer_8">8dp</dimen>
 </resources>
