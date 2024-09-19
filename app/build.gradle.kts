@@ -33,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -47,4 +50,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.face.detection)
     implementation(libs.lottie)
+    implementation("com.spotify.android:auth:1.2.5")
+    implementation("androidx.browser:browser:1.8.0")
 }
