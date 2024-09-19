@@ -2,4 +2,5 @@
 <resources>
     <dimen name="spacer_64">64dp</dimen>
     <dimen name="spacer_32">32dp</dimen>
+    <dimen name="spacer_16">16dp</dimen>
 </resources>

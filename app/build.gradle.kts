@@ -46,5 +46,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.face.detection)
-    implementation("com.airbnb.android:lottie:6.5.2")
+    implementation(libs.lottie)
 }
