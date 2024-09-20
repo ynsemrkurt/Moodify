@@ -9,4 +9,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_with">Login with</string>
+    <string name="welcome_image">welcome image</string>
+    <string name="music_plak">music plak</string>
+    <string name="tape">Tape</string>
+    <string name="slogan">Slogan</string>
+    <string name="play_image">Play image</string>
+    <string name="spotify">Spotify</string>
+    <string name="slogan_text">\"Let your mood define the music.\"</string>
 </resources>

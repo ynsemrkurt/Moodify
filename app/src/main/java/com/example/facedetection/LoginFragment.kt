@@ -22,7 +22,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.constraintLayoutButton.setOnClickListener{
+        binding.loginButton.setOnClickListener{
             (activity as MainActivity).loginWithSpotify()
         }
     }

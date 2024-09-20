@@ -7,13 +7,13 @@
     tools:context=".LoginFragment">
 
     <TextView
-        android:id="@+id/font"
+        android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacer_16"
         android:text="@string/app_name"
-        android:textStyle="bold"
         android:textSize="@dimen/text_size_24"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,79 +21,81 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:src="@drawable/note"
+        android:contentDescription="@string/welcome_image"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-        app:layout_constraintTop_toBottomOf="@+id/font" />
+        android:src="@drawable/note"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="@dimen/spacer_64"
         android:layout_height="@dimen/spacer_64"
-        android:src="@drawable/music_record"
+        android:layout_marginStart="@dimen/spacer_8"
+        android:contentDescription="@string/music_plak"
         android:elevation="@dimen/spacer_8"
         android:rotation="-10"
-        android:layout_marginStart="@dimen/spacer_8"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-        app:layout_constraintStart_toStartOf="@+id/materialCardView"
-        app:layout_constraintTop_toTopOf="@+id/materialCardView" />
+        android:src="@drawable/music_record"
+        app:layout_constraintBottom_toTopOf="@+id/welcomeCardView"
+        app:layout_constraintStart_toStartOf="@+id/welcomeCardView"
+        app:layout_constraintTop_toTopOf="@+id/welcomeCardView" />
 
     <ImageView
         android:layout_width="@dimen/spacer_64"
         android:layout_height="@dimen/spacer_64"
-        android:src="@drawable/tape"
+        android:layout_marginEnd="@dimen/spacer_16"
+        android:contentDescription="@string/tape"
         android:elevation="@dimen/spacer_32"
         android:rotation="20"
-        android:layout_marginEnd="@dimen/spacer_16"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
-        app:layout_constraintTop_toTopOf="@+id/materialCardView" />
+        android:src="@drawable/tape"
+        app:layout_constraintBottom_toTopOf="@+id/welcomeCardView"
+        app:layout_constraintEnd_toEndOf="@+id/welcomeCardView"
+        app:layout_constraintTop_toTopOf="@+id/welcomeCardView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacer_16"
+        android:text="@string/slogan_text"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_size_24"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="@+id/welcomeCardView"
+        app:layout_constraintStart_toStartOf="@+id/welcomeCardView" />
+
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
+        android:id="@+id/welcomeCardView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacer_32"
         android:layout_marginBottom="@dimen/spacer_16"
-        app:cardElevation="@dimen/spacer_16"
         app:cardBackgroundColor="?backgroundColor"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutButton"
-        app:layout_constraintDimensionRatio="4:3"
+        app:cardElevation="@dimen/spacer_16"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
+            android:id="@+id/imageViewPlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/slogan"
-                app:tint="?color"
-                app:layout_constraintBottom_toTopOf="@+id/imageView3"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintEnd_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacer_64"
-                android:layout_marginHorizontal="@dimen/spacer_16"
-                android:layout_marginBottom="@dimen/spacer_16"
-                android:src="@drawable/play_sound"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="@dimen/spacer_64"
+            android:layout_margin="@dimen/spacer_16"
+            android:contentDescription="@string/play_image"
+            android:src="@drawable/play_sound"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </com.google.android.material.card.MaterialCardView>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutButton"
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacer_32"
@@ -105,7 +107,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/spacer_8"
@@ -114,20 +116,21 @@
             android:textSize="@dimen/text_size_24"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewSpotify"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageViewSpotify"
             android:layout_width="120dp"
             android:layout_height="@dimen/spacer_32"
+            android:contentDescription="@string/spotify"
             android:src="@drawable/spotify_logo"
-            app:tint="?backgroundColor"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewLogin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView" />
+            app:layout_constraintStart_toEndOf="@+id/textViewLogin"
+            app:tint="?backgroundColor" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
