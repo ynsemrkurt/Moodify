@@ -42,15 +42,24 @@ class MainActivity : AppCompatActivity() {
 
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
-                    Toast.makeText(this, "Başarılı", Toast.LENGTH_SHORT).show()
+                    val moodFragment = MoodFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("TOKEN_KEY", response.accessToken)
+                        }
+                    }
+
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, moodFragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
 
                 AuthorizationResponse.Type.ERROR -> {
-                    Toast.makeText(this, "Hata", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, response.error, Toast.LENGTH_SHORT).show()
                 }
 
                 else -> {
-                    Toast.makeText(this, "Beklenmedik bir hata", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }

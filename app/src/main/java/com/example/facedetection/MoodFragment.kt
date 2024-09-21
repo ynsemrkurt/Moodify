@@ -29,6 +29,7 @@ class MoodFragment : Fragment() {
     private lateinit var binding: FragmentMoodBinding
     private var loadingDialog: AlertDialog? = null
     private val executor = Executors.newSingleThreadExecutor()
+    private var token: String? = null
 
     companion object {
         const val HAPPY = "Happy"
@@ -37,12 +38,15 @@ class MoodFragment : Fragment() {
         const val NEUTRAL = "Neutral"
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        token = arguments?.getString("TOKEN_KEY")
+
         binding = FragmentMoodBinding.inflate(inflater)
-        return inflater.inflate(R.layout.fragment_mood, container, false)
+        return binding.root
     }
 
     private val pickMedia =
@@ -157,7 +161,17 @@ class MoodFragment : Fragment() {
         }
 
         requireActivity().runOnUiThread {
-            binding.moodTextView.text = getString(R.string.mood, mood)
+            val listFragment = ListFragment().apply {
+                arguments = Bundle().apply {
+                    putString("MOOD", mood)
+                    putString("TOKEN_KEY", token)
+                }
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, listFragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 }
