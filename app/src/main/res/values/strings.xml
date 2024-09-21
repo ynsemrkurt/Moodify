@@ -16,4 +16,6 @@
     <string name="play_image">Play image</string>
     <string name="spotify">Spotify</string>
     <string name="slogan_text">\"Let your mood define the music.\"</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="play_list_image">Play list image</string>
 </resources>
