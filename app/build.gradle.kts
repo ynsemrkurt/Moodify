@@ -52,4 +52,7 @@ dependencies {
     implementation(libs.lottie)
     implementation("com.spotify.android:auth:1.2.5")
     implementation("androidx.browser:browser:1.8.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
