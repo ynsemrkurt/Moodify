@@ -8,52 +8,49 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.facedetection.databinding.ItemPlaylistBinding
 
-class PlaylistAdapter(private val playlists: List<PlaylistItem>) :
-    RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+class PlaylistAdapter(private val playlistsWithUsers: List<PlaylistWithUser>) :
+    RecyclerView.Adapter<PlaylistAdapter.PlaylistAdapterViewHolder>() {
 
-    inner class PlaylistViewHolder(val binding: ItemPlaylistBinding) :
+    inner class PlaylistAdapterViewHolder(val binding: ItemPlaylistBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistAdapterViewHolder {
         val binding =
             ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PlaylistViewHolder(binding)
+        return PlaylistAdapterViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        val playlist = playlists[position]
+    override fun onBindViewHolder(holder: PlaylistAdapterViewHolder, position: Int) =
         with(holder.binding) {
-            bindPlaylistData(playlist, holder)
+            val playlistWithUser = playlistsWithUsers[position]
+
+            textViewListName.text = playlistWithUser.playlist.name
+            textViewListDescription.text = playlistWithUser.user.displayName
+
+            Glide.with(holder.itemView.context)
+                .load(playlistWithUser.user.images.firstOrNull()?.url)
+                .into(imageViewProfile)
+
+            Glide.with(holder.itemView.context)
+                .load(playlistWithUser.playlist.images.firstOrNull()?.url)
+                .into(imageViewList)
+
+            imageViewProfile.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(playlistWithUser.playlist.externalUrls.spotify)
+                )
+                holder.itemView.context.startActivity(intent)
+            }
+
+            root.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(playlistWithUser.playlist.externalUrls.spotify)
+                )
+                holder.itemView.context.startActivity(intent)
+            }
         }
-    }
 
-    override fun getItemCount(): Int = playlists.size
-
-    private fun ItemPlaylistBinding.bindPlaylistData(playlist: PlaylistItem, holder: PlaylistViewHolder) {
-        textViewListName.text = playlist.name
-        textViewListDescription.text = holder.itemView.context.getString(
-            R.string.made_for, playlist.type, playlist.owner.displayName
-        )
-
-        Glide.with(holder.itemView.context)
-            .load(playlist.images.firstOrNull()?.url)
-            .into(imageViewList)
-
-        setClickListeners(playlist, holder)
-    }
-
-    private fun ItemPlaylistBinding.setClickListeners(playlist: PlaylistItem, holder: PlaylistViewHolder) {
-        textViewListDescription.setOnClickListener {
-            openSpotifyLink(playlist.owner.externalUrls.spotify, holder)
-        }
-
-        root.setOnClickListener {
-            openSpotifyLink(playlist.externalUrls.spotify, holder)
-        }
-    }
-
-    private fun openSpotifyLink(url: String, holder: PlaylistViewHolder) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        holder.itemView.context.startActivity(intent)
-    }
+    override fun getItemCount(): Int = playlistsWithUsers.size
 }
