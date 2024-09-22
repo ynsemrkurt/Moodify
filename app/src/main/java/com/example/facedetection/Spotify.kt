@@ -1,5 +1,6 @@
 package com.example.facedetection
 
+import com.example.facedetection.Spotify.DEF_NAME
 import com.google.gson.annotations.SerializedName
 
 data class SpotifySearchResponse(
@@ -19,6 +20,19 @@ data class PlaylistItem(
     val images: List<Image>,
     @SerializedName("external_urls")
     val externalUrls: ExternalUrls,
+    @SerializedName("type")
+    val type: String,
+    @SerializedName("owner")
+    val owner: Owner,
+)
+
+data class Owner(
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("external_urls")
+    val externalUrls: ExternalUrls,
+    @SerializedName("display_name")
+    val displayName: String? = DEF_NAME,
 )
 
 data class Image(
