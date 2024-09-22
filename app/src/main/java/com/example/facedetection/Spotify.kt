@@ -29,10 +29,15 @@ data class PlaylistItem(
 data class Owner(
     @SerializedName("id")
     val id: String,
+)
+
+data class User(
+    @SerializedName("display_name")
+    val displayName: String,
     @SerializedName("external_urls")
     val externalUrls: ExternalUrls,
-    @SerializedName("display_name")
-    val displayName: String? = DEF_NAME,
+    @SerializedName("images")
+    val images: List<Image>,
 )
 
 data class Image(
@@ -43,4 +48,9 @@ data class Image(
 data class ExternalUrls(
     @SerializedName("spotify")
     val spotify: String,
+)
+
+data class PlaylistWithUser(
+    val playlist: PlaylistItem,
+    val user: User
 )

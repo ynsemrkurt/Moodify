@@ -18,7 +18,7 @@ interface SpotifyApiService {
     suspend fun getUser(
         @Header("Authorization") token: String,
         @Path("user_id") userId: String
-    ): SpotifySearchResponse
+    ): User
 }
 
 const val SEARCH = "search"
