@@ -11,28 +11,49 @@ import com.example.facedetection.databinding.ItemPlaylistBinding
 class PlaylistAdapter(private val playlists: List<PlaylistItem>) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
-    inner class PlaylistViewHolder(val binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class PlaylistViewHolder(val binding: ItemPlaylistBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val binding = ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlaylistViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         val playlist = playlists[position]
-        holder.binding.textViewListName.text = playlist.name
-
-        Glide.with(holder.itemView.context)
-            .load(playlist.images.firstOrNull()?.url)
-            .into(holder.binding.imageViewList)
-
-        holder.binding.root.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playlist.externalUrls.spotify))
-            holder.itemView.context.startActivity(intent)
+        with(holder.binding) {
+            bindPlaylistData(playlist, holder)
         }
     }
 
-    override fun getItemCount(): Int {
-        return playlists.size
+    override fun getItemCount(): Int = playlists.size
+
+    private fun ItemPlaylistBinding.bindPlaylistData(playlist: PlaylistItem, holder: PlaylistViewHolder) {
+        textViewListName.text = playlist.name
+        textViewListDescription.text = holder.itemView.context.getString(
+            R.string.made_for, playlist.type, playlist.owner.displayName
+        )
+
+        Glide.with(holder.itemView.context)
+            .load(playlist.images.firstOrNull()?.url)
+            .into(imageViewList)
+
+        setClickListeners(playlist, holder)
+    }
+
+    private fun ItemPlaylistBinding.setClickListeners(playlist: PlaylistItem, holder: PlaylistViewHolder) {
+        textViewListDescription.setOnClickListener {
+            openSpotifyLink(playlist.owner.externalUrls.spotify, holder)
+        }
+
+        root.setOnClickListener {
+            openSpotifyLink(playlist.externalUrls.spotify, holder)
+        }
+    }
+
+    private fun openSpotifyLink(url: String, holder: PlaylistViewHolder) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        holder.itemView.context.startActivity(intent)
     }
 }
