@@ -34,7 +34,7 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchList()
-        observePlaylists()
+        observePlaylistsWithUsers()
     }
 
     private fun searchList() {
@@ -44,7 +44,7 @@ class ListFragment : Fragment() {
         val genres = getGenresForMood(mood)
 
         accessToken?.let { token ->
-            viewModel.searchPlaylists(genres, token)
+            viewModel.searchPlaylistsAndUsers(genres, token)
         }
     }
 
@@ -57,9 +57,9 @@ class ListFragment : Fragment() {
         }.random()
     }
 
-    private fun observePlaylists() {
-        viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
-            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlists)
+    private fun observePlaylistsWithUsers() {
+        viewModel.playlistsWithUsers.observe(viewLifecycleOwner) { playlistsWithUsers ->
+            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers)
         }
     }
 }

@@ -11,18 +11,27 @@ import kotlinx.coroutines.launch
 
 class ListViewModel : ViewModel() {
 
-    private val _playlists = MutableLiveData<List<PlaylistItem>>()
-    val playlists: LiveData<List<PlaylistItem>> = _playlists
+    private val _playlistsWithUsers = MutableLiveData<List<PlaylistWithUser>>()
+    val playlistsWithUsers: LiveData<List<PlaylistWithUser>> = _playlistsWithUsers
 
     private val spotifyApiService = SpotifyRetrofitInstance.apiService
 
-    fun searchPlaylists(genre: String, accessToken: String) {
+    fun searchPlaylistsAndUsers(genre: String, accessToken: String) {
         viewModelScope.launch {
             try {
-                _playlists.value = spotifyApiService
+                val playlists = spotifyApiService
                     .searchPlaylists(TOKEN_TYPE + accessToken, GENRE_TYPE + genre, PLAYLIST)
                     .playlists
                     .items
+
+                val playlistsWithUsers = playlists.map { playlist ->
+                    val user = spotifyApiService
+                        .getUser(TOKEN_TYPE + accessToken, playlist.owner.id)
+
+                    PlaylistWithUser(playlist, user)
+                }
+
+                _playlistsWithUsers.value = playlistsWithUsers
 
             } catch (e: Exception) {
                 e.printStackTrace()
