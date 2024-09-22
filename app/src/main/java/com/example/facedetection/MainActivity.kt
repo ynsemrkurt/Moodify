@@ -4,20 +4,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.facedetection.BuildConfig.CLIENT_ID
+import com.example.facedetection.BuildConfig.REDIRECT_URI
+import com.example.facedetection.Spotify.STREAMING_KEY
+import com.example.facedetection.Spotify.TOKEN_KEY
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        const val REDIRECT_URI = "com.example.facedetection://callback"
-        const val CLIENT_ID = "09e91cdade3e42f194664ad025820db5"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
     }
 
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             AuthorizationResponse.Type.TOKEN,
             REDIRECT_URI
         )
-        builder.setScopes(arrayOf("streaming"))
+        builder.setScopes(arrayOf(STREAMING_KEY))
         val request = builder.build()
 
         AuthorizationClient.openLoginInBrowser(this, request)
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 AuthorizationResponse.Type.TOKEN -> {
                     val moodFragment = MoodFragment().apply {
                         arguments = Bundle().apply {
-                            putString("TOKEN_KEY", response.accessToken)
+                            putString(TOKEN_KEY, response.accessToken)
                         }
                     }
 
@@ -59,7 +60,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
