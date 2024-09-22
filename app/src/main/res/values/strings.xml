@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Face Detection</string>
+    <string name="app_name">Moodify</string>
     <string name="no_photo_selected">No photo selected.</string>
     <string name="no_face_detected">No face detected.</string>
     <string name="an_error_occurred_during_analysis">An error occurred during analysis: %1$s</string>
@@ -18,4 +18,6 @@
     <string name="slogan_text">\"Let your mood define the music.\"</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="play_list_image">Play list image</string>
+    <string name="descreption">Playlist - made for Kurt</string>
+    <string name="made_for">%1$s - made for %2$s</string>
 </resources>
