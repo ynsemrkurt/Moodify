@@ -20,4 +20,5 @@
     <string name="play_list_image">Play list image</string>
     <string name="descreption">Playlist - made for Kurt</string>
     <string name="made_for">%1$s - made for %2$s</string>
+    <string name="kurt_playlist">Kurt - Playlist</string>
 </resources>

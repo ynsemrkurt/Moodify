@@ -7,4 +7,5 @@
     <dimen name="text_size_24">24sp</dimen>
     <dimen name="spacer_8">8dp</dimen>
     <dimen name="text_size_22">22sp</dimen>
+    <dimen name="spacer_4">4dp</dimen>
 </resources>

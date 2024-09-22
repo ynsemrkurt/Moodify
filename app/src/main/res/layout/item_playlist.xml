@@ -39,7 +39,7 @@
             android:id="@+id/textViewListName"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/spacer_8"
+            android:layout_marginHorizontal="@dimen/spacer_16"
             android:layout_marginTop="@dimen/spacer_8"
             android:ellipsize="end"
             android:maxLines="1"
@@ -50,27 +50,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardViewList" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="@dimen/spacer_32"
+            android:layout_height="@dimen/spacer_32"
+            android:layout_marginTop="@dimen/spacer_8"
+            android:src="@drawable/man_profile"
+            app:layout_constraintStart_toStartOf="@+id/textViewListName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewListName" />
+
         <TextView
             android:id="@+id/textViewListDescription"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacer_8"
+            android:layout_marginHorizontal="@dimen/spacer_8"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@string/descreption"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewListName" />
+            android:layout_marginBottom="@dimen/spacer_4"
+            android:text="@string/kurt_playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewProfile"
+            app:layout_constraintEnd_toEndOf="@+id/textViewListName"
+            app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+            app:layout_constraintTop_toTopOf="@+id/imageViewProfile" />
 
         <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="@dimen/spacer_64"
             android:layout_height="@dimen/spacer_32"
             android:layout_marginVertical="@dimen/spacer_8"
             android:contentDescription="@string/spotify"
             android:src="@drawable/spotify_logo"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewListDescription"
-            app:layout_constraintTop_toBottomOf="@+id/textViewListDescription"
+            app:layout_constraintStart_toStartOf="@+id/imageViewProfile"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewProfile"
             app:tint="?color" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
