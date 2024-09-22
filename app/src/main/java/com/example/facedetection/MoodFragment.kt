@@ -17,6 +17,12 @@ import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.facedetection.Mood.HAPPY
+import com.example.facedetection.Mood.MOOD
+import com.example.facedetection.Mood.NEUTRAL
+import com.example.facedetection.Mood.SAD
+import com.example.facedetection.Mood.TIRED
+import com.example.facedetection.Spotify.TOKEN_KEY
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -31,31 +37,22 @@ class MoodFragment : Fragment() {
     private val executor = Executors.newSingleThreadExecutor()
     private var token: String? = null
 
-    companion object {
-        const val HAPPY = "Happy"
-        const val SAD = "Sad"
-        const val TIRED = "Tired"
-        const val NEUTRAL = "Neutral"
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        token = arguments?.getString("TOKEN_KEY")
-
+        token = arguments?.getString(TOKEN_KEY)
         binding = FragmentMoodBinding.inflate(inflater)
         return binding.root
     }
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) {
-                binding.imageView.setImageURI(uri)
+            uri?.let {
+                binding.imageView.setImageURI(it)
                 showLoadingDialog()
-                analyzeSelectedImage(uri)
-            } else {
+                analyzeSelectedImage(it)
+            } ?: run {
                 binding.moodTextView.text = getString(R.string.no_photo_selected)
             }
         }
@@ -67,20 +64,24 @@ class MoodFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             } else {
-                if (ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        101
-                    )
-                } else {
-                    openGallery()
-                }
+                checkAndRequestPermissions()
             }
+        }
+    }
+
+    private fun checkAndRequestPermissions() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                101
+            )
+        } else {
+            openGallery()
         }
     }
 
@@ -89,12 +90,10 @@ class MoodFragment : Fragment() {
         startActivityForResult(intent, 102)
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 102 && resultCode == RESULT_OK) {
-            val imageUri: Uri? = data?.data
-            if (imageUri != null) {
+            data?.data?.let { imageUri ->
                 binding.imageView.setImageURI(imageUri)
                 showLoadingDialog()
                 analyzeSelectedImage(imageUri)
@@ -103,16 +102,15 @@ class MoodFragment : Fragment() {
     }
 
     private fun showLoadingDialog() {
-        val builder = AlertDialog.Builder(requireContext())
         val dialogView = layoutInflater.inflate(R.layout.loading_dialog, null)
-        builder.setView(dialogView)
-        loadingDialog = builder.create()
+        loadingDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
         loadingDialog?.show()
+
         executor.execute {
             Thread.sleep(5000)
-            requireActivity().runOnUiThread {
-                loadingDialog?.dismiss()
-            }
+            requireActivity().runOnUiThread { loadingDialog?.dismiss() }
         }
     }
 
@@ -120,25 +118,17 @@ class MoodFragment : Fragment() {
         try {
             val bitmap =
                 MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            val image = InputImage.fromBitmap(bitmap, 0)
+            val inputImage = InputImage.fromBitmap(bitmap, 0)
 
-            val options = FaceDetectorOptions.Builder()
-                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
-                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-                .build()
+            val detector = FaceDetection.getClient(
+                FaceDetectorOptions.Builder()
+                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                    .build()
+            )
 
-            val detector = FaceDetection.getClient(options)
-
-            detector.process(image)
-                .addOnSuccessListener { faces ->
-                    if (faces.isNotEmpty()) {
-                        for (face in faces) {
-                            analyzeFace(face)
-                        }
-                    } else {
-                        binding.moodTextView.text = getString(R.string.no_face_detected)
-                    }
-                }
+            detector.process(inputImage)
+                .addOnSuccessListener { faces -> handleFaceDetectionResult(faces) }
                 .addOnFailureListener { e ->
                     binding.moodTextView.text =
                         getString(R.string.an_error_occurred_during_analysis, e.message)
@@ -148,23 +138,37 @@ class MoodFragment : Fragment() {
         }
     }
 
-    private fun analyzeFace(face: Face) {
+    private fun handleFaceDetectionResult(faces: List<Face>) {
+        if (faces.isEmpty()) {
+            binding.moodTextView.text = getString(R.string.no_face_detected)
+            return
+        }
+
+        faces.forEach { face ->
+            val mood = analyzeFaceMood(face)
+            navigateToListFragment(mood)
+        }
+    }
+
+    private fun analyzeFaceMood(face: Face): String {
         val smilingProb = face.smilingProbability ?: 0.0f
         val leftEyeOpenProb = face.leftEyeOpenProbability ?: 0.0f
         val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
 
-        val mood = when {
+        return when {
             smilingProb > 0.6f -> HAPPY
             smilingProb < 0.3f -> SAD
             leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> TIRED
             else -> NEUTRAL
         }
+    }
 
+    private fun navigateToListFragment(mood: String) {
         requireActivity().runOnUiThread {
             val listFragment = ListFragment().apply {
                 arguments = Bundle().apply {
-                    putString("MOOD", mood)
-                    putString("TOKEN_KEY", token)
+                    putString(MOOD, mood)
+                    putString(TOKEN_KEY, token)
                 }
             }
 
