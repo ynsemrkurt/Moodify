@@ -1,6 +1,13 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+val properties = Properties().apply {
+    load(FileInputStream(rootProject.file("gradle.properties")))
 }
 
 android {
@@ -15,6 +22,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "REDIRECT_URI", properties.getProperty("REDIRECT_URI"))
+        buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
     }
 
     buildTypes {
@@ -35,6 +46,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -55,4 +67,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.5")
+    implementation("androidx.fragment:fragment-ktx:1.8.3")
 }
