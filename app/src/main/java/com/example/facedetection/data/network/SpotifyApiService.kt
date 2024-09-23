@@ -1,10 +1,13 @@
 package com.example.facedetection.data.network
 
+import com.example.facedetection.data.model.FollowPlaylistRequest
 import com.example.facedetection.data.model.SpotifySearchResponse
 import com.example.facedetection.data.model.User
 import com.example.facedetection.ui.utils.Spotify.DEF_TYPE
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -21,7 +24,15 @@ interface SpotifyApiService {
         @Header("Authorization") token: String,
         @Path("user_id") userId: String
     ): User
+
+    @PUT(FOLLOW_PLAYLIST)
+    suspend fun followPlaylist(
+        @Header("Authorization") token: String,
+        @Path("playlist_id") playlistId: String,
+        @Body followPlaylistRequest: FollowPlaylistRequest = FollowPlaylistRequest(false)
+    )
 }
 
 const val SEARCH = "search"
 const val SEARCH_USER = "users/{user_id}"
+const val FOLLOW_PLAYLIST = "playlists/{playlist_id}/followers"

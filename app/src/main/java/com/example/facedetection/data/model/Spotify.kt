@@ -15,6 +15,8 @@ data class Playlists(
 data class PlaylistItem(
     @SerializedName("name")
     val name: String,
+    @SerializedName("id")
+    val id: String,
     @SerializedName("images")
     val images: List<Image>,
     @SerializedName("external_urls")
@@ -52,4 +54,8 @@ data class ExternalUrls(
 data class PlaylistWithUser(
     val playlist: PlaylistItem,
     val user: User
+)
+
+data class FollowPlaylistRequest(
+    val public: Boolean
 )
