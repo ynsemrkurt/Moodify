@@ -21,4 +21,7 @@
     <string name="descreption">Playlist - made for Kurt</string>
     <string name="made_for">%1$s - made for %2$s</string>
     <string name="kurt_playlist">Kurt - Playlist</string>
+    <string name="play_playlist">Play Playlist</string>
+    <string name="playlist_followed_successfully">Playlist followed successfully</string>
+    <string name="failed_to_follow_playlist">Failed to follow playlist</string>
 </resources>
