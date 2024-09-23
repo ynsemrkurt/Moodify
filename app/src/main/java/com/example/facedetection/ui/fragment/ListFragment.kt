@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.facedetection.databinding.FragmentListBinding
-import com.example.facedetection.ui.utils.GenreLists
-import com.example.facedetection.ui.viewModel.ListViewModel
-import com.example.facedetection.ui.utils.Mood
-import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.adapter.PlaylistAdapter
+import com.example.facedetection.ui.utils.GenreLists
+import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.Mood.HAPPY
+import com.example.facedetection.ui.utils.Mood.SAD
+import com.example.facedetection.ui.utils.Mood.TIRED
+import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.viewModel.ListViewModel
 
 class ListFragment : Fragment() {
 
@@ -46,9 +49,9 @@ class ListFragment : Fragment() {
 
     private fun getGenresForMood(mood: String): String {
         return when (mood) {
-            Mood.HAPPY -> GenreLists.happyGenres
-            Mood.SAD -> GenreLists.sadGenres
-            Mood.TIRED -> GenreLists.tiredGenres
+            HAPPY -> GenreLists.happyGenres
+            SAD -> GenreLists.sadGenres
+            TIRED -> GenreLists.tiredGenres
             else -> GenreLists.neutralGenres
         }.random()
     }
