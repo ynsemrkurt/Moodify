@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -44,11 +45,26 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="@dimen/spacer_32"
-        android:layout_marginBottom="@dimen/spacer_16"
+        android:layout_marginBottom="@dimen/spacer_72"
         android:background="@drawable/button_background"
         android:text="@string/select_photo_from_gallery"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageBtnSelectPhoto"
+        android:layout_width="@dimen/spacer_48"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/spacer_24"
+        android:layout_marginEnd="@dimen/spacer_24"
+        android:layout_marginBottom="@dimen/spacer_32"
+        android:background="@drawable/mini_button_background"
+        android:contentDescription="@string/imageCamera"
+        android:src="@drawable/camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selectPhotoButton"
+        app:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

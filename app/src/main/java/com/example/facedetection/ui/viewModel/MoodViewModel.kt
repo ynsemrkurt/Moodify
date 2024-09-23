@@ -14,6 +14,7 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import android.os.Handler
 import android.os.Looper
+
 class MoodViewModel : ViewModel() {
     private val _mood = MutableLiveData<String>()
     val mood: LiveData<String> = _mood
@@ -70,11 +71,10 @@ class MoodViewModel : ViewModel() {
             else -> Mood.NEUTRAL
         }
     }
+
     fun executeWithDelay(delayMillis: Long, action: () -> Unit) {
         Handler(Looper.getMainLooper()).postDelayed({
             action()
         }, delayMillis)
     }
-
-
 }

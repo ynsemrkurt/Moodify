@@ -8,4 +8,7 @@
     <dimen name="spacer_8">8dp</dimen>
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="spacer_4">4dp</dimen>
+    <dimen name="spacer_48">48dp</dimen>
+    <dimen name="spacer_12">12dp</dimen>
+    <dimen name="spacer_72">72dp</dimen>
 </resources>
