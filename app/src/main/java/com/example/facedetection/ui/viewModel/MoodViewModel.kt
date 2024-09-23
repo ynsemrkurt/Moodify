@@ -77,4 +77,27 @@ class MoodViewModel : ViewModel() {
             action()
         }, delayMillis)
     }
+    fun analyzeSelectedImageFromBitmap(bitmap: Bitmap) {
+        try {
+            val inputImage = InputImage.fromBitmap(bitmap, 0)
+
+            val detector = FaceDetection.getClient(
+                FaceDetectorOptions.Builder()
+                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                    .build()
+            )
+
+            detector.process(inputImage)
+                .addOnSuccessListener { faces ->
+                    handleFaceDetectionResult(faces)
+                }
+                .addOnFailureListener { e ->
+                    _mood.value = "Error: ${e.message}"
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _mood.value = "Error: ${e.message}"
+        }
+    }
 }

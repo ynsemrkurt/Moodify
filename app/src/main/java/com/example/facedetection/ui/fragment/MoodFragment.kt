@@ -101,7 +101,13 @@ class MoodFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
+
+            // Fotoğrafı ImageView'de gösterelim
+            binding.imageView.setImageBitmap(imageBitmap)
+
             // Fotoğrafı işleme
+            showLoadingDialog()
+            moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
         }
     }
 
