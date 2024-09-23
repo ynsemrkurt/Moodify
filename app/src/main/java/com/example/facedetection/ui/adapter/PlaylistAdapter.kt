@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.facedetection.R
 import com.example.facedetection.data.model.PlaylistWithUser
 import com.example.facedetection.databinding.ItemPlaylistBinding
 
@@ -30,10 +31,14 @@ class PlaylistAdapter(private val playlistsWithUsers: List<PlaylistWithUser>) :
 
             Glide.with(holder.itemView.context)
                 .load(playlistWithUser.user.images.firstOrNull()?.url)
+                .placeholder(R.drawable.man_profile)
+                .error(R.drawable.man_profile)
                 .into(imageViewProfile)
 
             Glide.with(holder.itemView.context)
                 .load(playlistWithUser.playlist.images.firstOrNull()?.url)
+                .placeholder(R.drawable.image_32)
+                .error(R.drawable.image_32)
                 .into(imageViewList)
 
             imageViewProfile.setOnClickListener {
