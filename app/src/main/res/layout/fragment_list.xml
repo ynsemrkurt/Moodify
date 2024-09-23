@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
         android:id="@+id/recyclerViewPlayList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

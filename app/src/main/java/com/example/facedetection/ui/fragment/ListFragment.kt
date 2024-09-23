@@ -65,9 +65,12 @@ class ListFragment : Fragment() {
             binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers,
                 onAddListClick = { playlistId ->
                     viewModel.followPlaylist(playlistId, accessToken)
-                    Toast.makeText(requireContext(), playlistId, Toast.LENGTH_SHORT).show()
                 }
             )
+            binding.recyclerViewPlayList.apply {
+                set3DItem(true)
+                setAlpha(true)
+            }
         }
     }
 
