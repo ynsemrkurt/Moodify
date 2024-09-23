@@ -1,8 +1,10 @@
 package com.example.facedetection.ui.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +12,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +24,7 @@ import androidx.fragment.app.viewModels
 import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.PermissionManager
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.viewModel.MoodViewModel
 
@@ -29,6 +34,8 @@ class MoodFragment : Fragment() {
     private val moodViewModel: MoodViewModel by viewModels()
     private var loadingDialog: AlertDialog? = null
     private var token: String? = null
+    private lateinit var permissionManager: PermissionManager
+    private val REQUEST_IMAGE_CAPTURE = 101
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
@@ -53,6 +60,18 @@ class MoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // PermissionManager'ı başlatıyoruz
+        permissionManager = PermissionManager(requireActivity())
+
+        val openCameraButton: ImageButton = view.findViewById(R.id.imageBtnSelectPhoto)
+        openCameraButton.setOnClickListener {
+            if (permissionManager.checkCameraPermission()) {
+                openCamera()
+            } else {
+                permissionManager.requestCameraPermission()
+            }
+        }
+
         binding.selectPhotoButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -69,6 +88,36 @@ class MoodFragment : Fragment() {
             }
             dismissLoadingDialog()
         }
+    }
+
+    private fun openCamera() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            // Fotoğrafı işleme
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        permissionManager.handlePermissionsResult(
+            requestCode,
+            grantResults,
+            onPermissionGranted = { openCamera() },
+            onPermissionDenied = {
+                Toast.makeText(context, "Kamera izni reddedildi", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
     private fun checkAndRequestPermissions() {
