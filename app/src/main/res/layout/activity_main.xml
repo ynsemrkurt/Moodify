@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
-        android:name="com.example.facedetection.LoginFragment"
+        android:name="com.example.facedetection.ui.fragment.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="@dimen/spacer_16"

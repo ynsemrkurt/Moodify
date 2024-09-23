@@ -1,6 +1,5 @@
-package com.example.facedetection
+package com.example.facedetection.data.model
 
-import com.example.facedetection.Spotify.DEF_NAME
 import com.google.gson.annotations.SerializedName
 
 data class SpotifySearchResponse(

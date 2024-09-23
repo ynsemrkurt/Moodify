@@ -1,6 +1,7 @@
-package com.example.facedetection
+package com.example.facedetection.ui.fragment
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,17 +14,13 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.facedetection.Mood.HAPPY
-import com.example.facedetection.Mood.MOOD
-import com.example.facedetection.Mood.NEUTRAL
-import com.example.facedetection.Mood.SAD
-import com.example.facedetection.Mood.TIRED
-import com.example.facedetection.Spotify.TOKEN_KEY
+import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
+import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.Spotify
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
@@ -41,7 +38,7 @@ class MoodFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        token = arguments?.getString(TOKEN_KEY)
+        token = arguments?.getString(Spotify.TOKEN_KEY)
         binding = FragmentMoodBinding.inflate(inflater)
         return binding.root
     }
@@ -156,10 +153,10 @@ class MoodFragment : Fragment() {
         val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
 
         return when {
-            smilingProb > 0.6f -> HAPPY
-            smilingProb < 0.3f -> SAD
-            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> TIRED
-            else -> NEUTRAL
+            smilingProb > 0.6f -> Mood.HAPPY
+            smilingProb < 0.3f -> Mood.SAD
+            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> Mood.TIRED
+            else -> Mood.NEUTRAL
         }
     }
 
@@ -167,8 +164,8 @@ class MoodFragment : Fragment() {
         requireActivity().runOnUiThread {
             val listFragment = ListFragment().apply {
                 arguments = Bundle().apply {
-                    putString(MOOD, mood)
-                    putString(TOKEN_KEY, token)
+                    putString(Mood.MOOD, mood)
+                    putString(Spotify.TOKEN_KEY, token)
                 }
             }
 

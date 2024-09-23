@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoodFragment">
+    tools:context=".ui.fragment.MoodFragment">
 
     <TextView
         android:id="@+id/moodTextView"

@@ -1,6 +1,8 @@
-package com.example.facedetection
+package com.example.facedetection.data.network
 
-import com.example.facedetection.Spotify.DEF_TYPE
+import com.example.facedetection.data.model.SpotifySearchResponse
+import com.example.facedetection.data.model.User
+import com.example.facedetection.ui.utils.Spotify.DEF_TYPE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path

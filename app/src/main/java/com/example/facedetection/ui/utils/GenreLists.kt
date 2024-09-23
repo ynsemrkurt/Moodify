@@ -1,4 +1,4 @@
-package com.example.facedetection
+package com.example.facedetection.ui.utils
 
 object GenreLists {
 

@@ -1,4 +1,4 @@
-package com.example.facedetection
+package com.example.facedetection.ui.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.facedetection.BuildConfig.CLIENT_ID
-import com.example.facedetection.BuildConfig.REDIRECT_URI
-import com.example.facedetection.Spotify.STREAMING_KEY
-import com.example.facedetection.Spotify.TOKEN_KEY
+import com.example.facedetection.BuildConfig
+import com.example.facedetection.R
+import com.example.facedetection.ui.fragment.MoodFragment
+import com.example.facedetection.ui.utils.Spotify
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
 
     fun loginWithSpotify() {
         val builder = AuthorizationRequest.Builder(
-            CLIENT_ID,
+            BuildConfig.CLIENT_ID,
             AuthorizationResponse.Type.TOKEN,
-            REDIRECT_URI
+            BuildConfig.REDIRECT_URI
         )
-        builder.setScopes(arrayOf(STREAMING_KEY))
+        builder.setScopes(arrayOf(Spotify.STREAMING_KEY))
         val request = builder.build()
 
         AuthorizationClient.openLoginInBrowser(this, request)
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 AuthorizationResponse.Type.TOKEN -> {
                     val moodFragment = MoodFragment().apply {
                         arguments = Bundle().apply {
-                            putString(TOKEN_KEY, response.accessToken)
+                            putString(Spotify.TOKEN_KEY, response.accessToken)
                         }
                     }
 

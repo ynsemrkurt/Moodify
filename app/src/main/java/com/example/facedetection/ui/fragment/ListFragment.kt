@@ -1,4 +1,4 @@
-package com.example.facedetection
+package com.example.facedetection.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,16 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.facedetection.GenreLists.happyGenres
-import com.example.facedetection.GenreLists.neutralGenres
-import com.example.facedetection.GenreLists.sadGenres
-import com.example.facedetection.GenreLists.tiredGenres
-import com.example.facedetection.Mood.HAPPY
-import com.example.facedetection.Mood.MOOD
-import com.example.facedetection.Mood.SAD
-import com.example.facedetection.Mood.TIRED
-import com.example.facedetection.Spotify.TOKEN_KEY
 import com.example.facedetection.databinding.FragmentListBinding
+import com.example.facedetection.ui.utils.GenreLists
+import com.example.facedetection.ui.viewModel.ListViewModel
+import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.adapter.PlaylistAdapter
 
 class ListFragment : Fragment() {
 
@@ -38,8 +34,8 @@ class ListFragment : Fragment() {
     }
 
     private fun searchList() {
-        val accessToken = arguments?.getString(TOKEN_KEY)
-        val mood = arguments?.getString(MOOD).toString()
+        val accessToken = arguments?.getString(Spotify.TOKEN_KEY)
+        val mood = arguments?.getString(Mood.MOOD).toString()
 
         val genres = getGenresForMood(mood)
 
@@ -50,10 +46,10 @@ class ListFragment : Fragment() {
 
     private fun getGenresForMood(mood: String): String {
         return when (mood) {
-            HAPPY -> happyGenres
-            SAD -> sadGenres
-            TIRED -> tiredGenres
-            else -> neutralGenres
+            Mood.HAPPY -> GenreLists.happyGenres
+            Mood.SAD -> GenreLists.sadGenres
+            Mood.TIRED -> GenreLists.tiredGenres
+            else -> GenreLists.neutralGenres
         }.random()
     }
 

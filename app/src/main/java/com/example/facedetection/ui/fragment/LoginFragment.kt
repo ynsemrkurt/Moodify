@@ -1,4 +1,4 @@
-package com.example.facedetection
+package com.example.facedetection.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.facedetection.databinding.FragmentLoginBinding
+import com.example.facedetection.ui.activity.MainActivity
 
 class LoginFragment : Fragment() {
 

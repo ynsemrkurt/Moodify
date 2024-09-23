@@ -1,4 +1,4 @@
-package com.example.facedetection
+package com.example.facedetection.data.network
 
 import com.example.facedetection.BuildConfig.BASE_URL
 import retrofit2.Retrofit
