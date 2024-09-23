@@ -39,10 +39,15 @@ class MoodFragment : Fragment() {
 
     private fun showLoadingAnimation() {
         binding.loadingAnimationView.visibility = View.VISIBLE
+        binding.imageView.visibility = View.GONE
     }
 
     private fun hideLoadingAnimation() {
         binding.loadingAnimationView.visibility = View.GONE
+        binding.imageView.visibility = View.VISIBLE
+    }
+    private fun onImageSelected() {
+        hideLoadingAnimation()
     }
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
@@ -50,6 +55,7 @@ class MoodFragment : Fragment() {
             binding.imageView.setImageURI(it)
             showLoadingDialog()
             moodViewModel.analyzeSelectedImage(requireContext(), it)
+            onImageSelected()
         } ?: run {
             binding.moodTextView.text = getString(R.string.no_photo_selected)
         }
