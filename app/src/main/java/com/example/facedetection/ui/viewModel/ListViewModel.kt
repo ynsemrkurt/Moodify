@@ -8,6 +8,8 @@ import com.example.facedetection.data.model.PlaylistWithUser
 import com.example.facedetection.data.network.SpotifyRetrofitInstance
 import com.example.facedetection.ui.utils.SearchType
 import com.example.facedetection.ui.utils.Spotify
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class ListViewModel : ViewModel() {
@@ -29,11 +31,12 @@ class ListViewModel : ViewModel() {
                     .items
 
                 val playlistsWithUsers = playlists.map { playlist ->
-                    val user = spotifyApiService
-                        .getUser(Spotify.TOKEN_TYPE + accessToken, playlist.owner.id)
-
-                    PlaylistWithUser(playlist, user)
-                }
+                    async {
+                        val user = spotifyApiService
+                            .getUser(Spotify.TOKEN_TYPE + accessToken, playlist.owner.id)
+                        PlaylistWithUser(playlist, user)
+                    }
+                }.awaitAll()
 
                 _playlistsWithUsers.value = playlistsWithUsers
 
