@@ -19,6 +19,9 @@ class MoodViewModel : ViewModel() {
     private val _mood = MutableLiveData<String>()
     val mood: LiveData<String> = _mood
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> = _error
+
     fun analyzeSelectedImage(context: Context, imageUri: Uri) {
         try {
             val bitmap = getBitmapFromUri(context, imageUri)
@@ -36,11 +39,11 @@ class MoodViewModel : ViewModel() {
                     handleFaceDetectionResult(faces)
                 }
                 .addOnFailureListener { e ->
-                    _mood.value = "Error: ${e.message}"
+                    _error.value = "Error: ${e.message}"
                 }
         } catch (e: Exception) {
             e.printStackTrace()
-            _mood.value = "Error: ${e.message}"
+            _error.value = "Error: ${e.message}"
         }
     }
 
@@ -50,7 +53,7 @@ class MoodViewModel : ViewModel() {
 
     private fun handleFaceDetectionResult(faces: List<Face>) {
         if (faces.isEmpty()) {
-            _mood.value = "No face detected"
+            _error.value = "No face detected"
         } else {
             faces.forEach { face ->
                 val detectedMood = analyzeFaceMood(face)
@@ -77,6 +80,7 @@ class MoodViewModel : ViewModel() {
             action()
         }, delayMillis)
     }
+
     fun analyzeSelectedImageFromBitmap(bitmap: Bitmap) {
         try {
             val inputImage = InputImage.fromBitmap(bitmap, 0)

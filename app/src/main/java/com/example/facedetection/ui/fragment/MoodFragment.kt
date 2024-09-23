@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.Settings
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -27,6 +27,7 @@ import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.PermissionManager
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.viewModel.MoodViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MoodFragment : Fragment() {
 
@@ -36,6 +37,14 @@ class MoodFragment : Fragment() {
     private var token: String? = null
     private lateinit var permissionManager: PermissionManager
     private val REQUEST_IMAGE_CAPTURE = 101
+
+    private fun showLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.VISIBLE
+    }
+
+    private fun hideLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.GONE
+    }
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
@@ -81,11 +90,12 @@ class MoodFragment : Fragment() {
         }
 
         moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
-            if (mood.startsWith("Error")) {
-                binding.moodTextView.text = mood
-            } else {
-                navigateToListFragment(mood)
-            }
+            navigateToListFragment(mood)
+            dismissLoadingDialog()
+        }
+
+        moodViewModel.error.observe(viewLifecycleOwner) { error ->
+            binding.moodTextView.text = error
             dismissLoadingDialog()
         }
     }
@@ -93,6 +103,7 @@ class MoodFragment : Fragment() {
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+            showLoadingAnimation()
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
@@ -108,6 +119,7 @@ class MoodFragment : Fragment() {
             // Fotoğrafı işleme
             showLoadingDialog()
             moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
+            hideLoadingAnimation()
         }
     }
 
@@ -121,10 +133,22 @@ class MoodFragment : Fragment() {
             grantResults,
             onPermissionGranted = { openCamera() },
             onPermissionDenied = {
-                Toast.makeText(context, "Kamera izni reddedildi", Toast.LENGTH_SHORT).show()
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    "Kamera izni reddedildi. Ayarlardan izinleri değiştirin.",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                snackbar.setAction("Ayarlar") {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                }
+                snackbar.show()
             }
         )
     }
+
 
     private fun checkAndRequestPermissions() {
         if (ContextCompat.checkSelfPermission(

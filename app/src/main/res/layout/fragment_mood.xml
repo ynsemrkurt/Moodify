@@ -66,5 +66,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/selectPhotoButton"
         app:tint="@color/black" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingAnimationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/face"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
