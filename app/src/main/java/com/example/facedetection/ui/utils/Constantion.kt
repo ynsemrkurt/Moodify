@@ -10,10 +10,10 @@ object Mood {
 
 object Spotify {
     const val TOKEN_KEY = "Token_Key"
-    const val STREAMING_KEY = "streaming"
+    const val MODIFY_PLAYLIST_PRIVATE_KEY = "playlist-modify-private"
+    const val MODIFY_PLAYLIST_PUBLIC_KEY = "playlist-modify-public"
     const val TOKEN_TYPE = "Bearer "
     const val GENRE_TYPE = "genre:"
-    const val DEF_NAME = "User"
     const val DEF_TYPE = "Unknown"
 }
 

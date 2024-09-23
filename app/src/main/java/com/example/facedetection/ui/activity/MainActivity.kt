@@ -10,6 +10,8 @@ import com.example.facedetection.BuildConfig
 import com.example.facedetection.R
 import com.example.facedetection.ui.fragment.MoodFragment
 import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PRIVATE_KEY
+import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PUBLIC_KEY
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             AuthorizationResponse.Type.TOKEN,
             BuildConfig.REDIRECT_URI
         )
-        builder.setScopes(arrayOf(Spotify.STREAMING_KEY))
+        builder.setScopes(arrayOf(MODIFY_PLAYLIST_PRIVATE_KEY, MODIFY_PLAYLIST_PUBLIC_KEY))
         val request = builder.build()
 
         AuthorizationClient.openLoginInBrowser(this, request)
