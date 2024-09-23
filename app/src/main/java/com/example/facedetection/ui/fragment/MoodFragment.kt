@@ -1,7 +1,6 @@
 package com.example.facedetection.ui.fragment
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -17,22 +16,30 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.Spotify
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.Face
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
-import java.util.concurrent.Executors
+import com.example.facedetection.ui.viewModel.MoodViewModel
 
 class MoodFragment : Fragment() {
 
     private lateinit var binding: FragmentMoodBinding
+    private val moodViewModel: MoodViewModel by viewModels()
     private var loadingDialog: AlertDialog? = null
-    private val executor = Executors.newSingleThreadExecutor()
     private var token: String? = null
+
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+            uri?.let {
+                binding.imageView.setImageURI(it)
+                showLoadingDialog()
+                moodViewModel.analyzeSelectedImage(requireContext(), it)
+            } ?: run {
+                binding.moodTextView.text = getString(R.string.no_photo_selected)
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,17 +50,6 @@ class MoodFragment : Fragment() {
         return binding.root
     }
 
-    private val pickMedia =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            uri?.let {
-                binding.imageView.setImageURI(it)
-                showLoadingDialog()
-                analyzeSelectedImage(it)
-            } ?: run {
-                binding.moodTextView.text = getString(R.string.no_photo_selected)
-            }
-        }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -63,6 +59,15 @@ class MoodFragment : Fragment() {
             } else {
                 checkAndRequestPermissions()
             }
+        }
+
+        moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
+            if (mood.startsWith("Error")) {
+                binding.moodTextView.text = mood
+            } else {
+                navigateToListFragment(mood)
+            }
+            dismissLoadingDialog()
         }
     }
 
@@ -87,17 +92,6 @@ class MoodFragment : Fragment() {
         startActivityForResult(intent, 102)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 102 && resultCode == RESULT_OK) {
-            data?.data?.let { imageUri ->
-                binding.imageView.setImageURI(imageUri)
-                showLoadingDialog()
-                analyzeSelectedImage(imageUri)
-            }
-        }
-    }
-
     private fun showLoadingDialog() {
         val dialogView = layoutInflater.inflate(R.layout.loading_dialog, null)
         loadingDialog = AlertDialog.Builder(requireContext())
@@ -105,74 +99,27 @@ class MoodFragment : Fragment() {
             .create()
         loadingDialog?.show()
 
-        executor.execute {
-            Thread.sleep(5000)
-            requireActivity().runOnUiThread { loadingDialog?.dismiss() }
+        moodViewModel.executeWithDelay(5000L) {
+            dismissLoadingDialog()
         }
     }
 
-    private fun analyzeSelectedImage(imageUri: Uri) {
-        try {
-            val bitmap =
-                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            val inputImage = InputImage.fromBitmap(bitmap, 0)
 
-            val detector = FaceDetection.getClient(
-                FaceDetectorOptions.Builder()
-                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
-                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-                    .build()
-            )
-
-            detector.process(inputImage)
-                .addOnSuccessListener { faces -> handleFaceDetectionResult(faces) }
-                .addOnFailureListener { e ->
-                    binding.moodTextView.text =
-                        getString(R.string.an_error_occurred_during_analysis, e.message)
-                }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun handleFaceDetectionResult(faces: List<Face>) {
-        if (faces.isEmpty()) {
-            binding.moodTextView.text = getString(R.string.no_face_detected)
-            return
-        }
-
-        faces.forEach { face ->
-            val mood = analyzeFaceMood(face)
-            navigateToListFragment(mood)
-        }
-    }
-
-    private fun analyzeFaceMood(face: Face): String {
-        val smilingProb = face.smilingProbability ?: 0.0f
-        val leftEyeOpenProb = face.leftEyeOpenProbability ?: 0.0f
-        val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
-
-        return when {
-            smilingProb > 0.6f -> Mood.HAPPY
-            smilingProb < 0.3f -> Mood.SAD
-            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> Mood.TIRED
-            else -> Mood.NEUTRAL
-        }
+    private fun dismissLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 
     private fun navigateToListFragment(mood: String) {
-        requireActivity().runOnUiThread {
-            val listFragment = ListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(Mood.MOOD, mood)
-                    putString(Spotify.TOKEN_KEY, token)
-                }
+        val listFragment = ListFragment().apply {
+            arguments = Bundle().apply {
+                putString(Mood.MOOD, mood)
+                putString(Spotify.TOKEN_KEY, token)
             }
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, listFragment)
-                .addToBackStack(null)
-                .commit()
         }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, listFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
