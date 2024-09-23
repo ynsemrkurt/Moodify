@@ -22,4 +22,6 @@
     <string name="made_for">%1$s - made for %2$s</string>
     <string name="kurt_playlist">Kurt - Playlist</string>
     <string name="imageCamera">Open Camera</string>
+    <string name="camera_permission_denied">Camera permission denied. Permissions granted from settings.</string>
+    <string name="settings">Setting</string>
 </resources>

@@ -46,21 +46,17 @@ class MoodFragment : Fragment() {
         binding.loadingAnimationView.visibility = View.GONE
     }
 
-    private val pickMedia =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            uri?.let {
-                binding.imageView.setImageURI(it)
-                showLoadingDialog()
-                moodViewModel.analyzeSelectedImage(requireContext(), it)
-            } ?: run {
-                binding.moodTextView.text = getString(R.string.no_photo_selected)
-            }
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        uri?.let {
+            binding.imageView.setImageURI(it)
+            showLoadingDialog()
+            moodViewModel.analyzeSelectedImage(requireContext(), it)
+        } ?: run {
+            binding.moodTextView.text = getString(R.string.no_photo_selected)
         }
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         token = arguments?.getString(Spotify.TOKEN_KEY)
         binding = FragmentMoodBinding.inflate(inflater)
         return binding.root
@@ -68,12 +64,14 @@ class MoodFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // PermissionManager'ı başlatıyoruz
         permissionManager = PermissionManager(requireActivity())
 
-        val openCameraButton: ImageButton = view.findViewById(R.id.imageBtnSelectPhoto)
-        openCameraButton.setOnClickListener {
+        setupListeners()
+        observeViewModel()
+    }
+
+    private fun setupListeners() {
+        binding.imageBtnSelectPhoto.setOnClickListener {
             if (permissionManager.checkCameraPermission()) {
                 openCamera()
             } else {
@@ -88,7 +86,9 @@ class MoodFragment : Fragment() {
                 checkAndRequestPermissions()
             }
         }
+    }
 
+    private fun observeViewModel() {
         moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
             navigateToListFragment(mood)
             dismissLoadingDialog()
@@ -101,10 +101,11 @@ class MoodFragment : Fragment() {
     }
 
     private fun openCamera() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-            showLoadingAnimation()
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                showLoadingAnimation()
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
         }
     }
 
@@ -112,43 +113,38 @@ class MoodFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-
-            // Fotoğrafı ImageView'de gösterelim
             binding.imageView.setImageBitmap(imageBitmap)
-
-            // Fotoğrafı işleme
             showLoadingDialog()
             moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
             hideLoadingAnimation()
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         permissionManager.handlePermissionsResult(
             requestCode,
             grantResults,
             onPermissionGranted = { openCamera() },
             onPermissionDenied = {
-                val snackbar = Snackbar.make(
-                    requireView(),
-                    "Kamera izni reddedildi. Ayarlardan izinleri değiştirin.",
-                    Snackbar.LENGTH_INDEFINITE
-                )
-                snackbar.setAction("Ayarlar") {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                }
-                snackbar.show()
+                showPermissionDeniedSnackbar()
             }
         )
     }
 
+    private fun showPermissionDeniedSnackbar() {
+        val snackbar = Snackbar.make(
+            requireView(),
+            getString(R.string.camera_permission_denied),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction(getString(R.string.settings)) {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+            intent.data = uri
+            startActivity(intent)
+        }
+        snackbar.show()
+    }
 
     private fun checkAndRequestPermissions() {
         if (ContextCompat.checkSelfPermission(
@@ -182,7 +178,6 @@ class MoodFragment : Fragment() {
             dismissLoadingDialog()
         }
     }
-
 
     private fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
