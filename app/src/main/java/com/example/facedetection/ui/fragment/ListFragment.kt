@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.facedetection.databinding.FragmentListBinding
@@ -20,6 +21,7 @@ class ListFragment : Fragment() {
 
     private lateinit var binding: FragmentListBinding
     private val viewModel: ListViewModel by viewModels()
+    private lateinit var accessToken: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +36,16 @@ class ListFragment : Fragment() {
 
         searchList()
         observePlaylistsWithUsers()
+        observeResult()
     }
 
     private fun searchList() {
-        val accessToken = arguments?.getString(Spotify.TOKEN_KEY)
+        accessToken = arguments?.getString(Spotify.TOKEN_KEY).toString()
         val mood = arguments?.getString(Mood.MOOD).toString()
 
         val genres = getGenresForMood(mood)
 
-        accessToken?.let { token ->
+        accessToken.let { token ->
             viewModel.searchPlaylistsAndUsers(genres, token)
         }
     }
@@ -58,7 +61,18 @@ class ListFragment : Fragment() {
 
     private fun observePlaylistsWithUsers() {
         viewModel.playlistsWithUsers.observe(viewLifecycleOwner) { playlistsWithUsers ->
-            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers)
+            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers,
+                onAddListClick = { playlistId ->
+                    viewModel.followPlaylist(playlistId, accessToken)
+                    Toast.makeText(requireContext(), playlistId, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
+
+    private fun observeResult() {
+        viewModel.result.observe(viewLifecycleOwner) { result ->
+            Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
         }
     }
 }
