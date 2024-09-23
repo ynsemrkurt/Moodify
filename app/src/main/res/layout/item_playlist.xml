@@ -74,7 +74,7 @@
             app:layout_constraintTop_toTopOf="@+id/imageViewProfile" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageViewSpotify"
             android:layout_width="@dimen/spacer_64"
             android:layout_height="@dimen/spacer_32"
             android:layout_marginVertical="@dimen/spacer_8"
