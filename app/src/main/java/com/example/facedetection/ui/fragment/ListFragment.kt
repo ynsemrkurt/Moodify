@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentListBinding
 import com.example.facedetection.ui.adapter.PlaylistAdapter
 import com.example.facedetection.ui.utils.GenreLists
@@ -72,7 +73,11 @@ class ListFragment : Fragment() {
 
     private fun observeResult() {
         viewModel.result.observe(viewLifecycleOwner) { result ->
-            Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
+            if (result == R.string.playlist_followed_successfully) {
+                SuccessDialogFragment().show(parentFragmentManager, "SuccessDialog")
+            } else {
+                Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

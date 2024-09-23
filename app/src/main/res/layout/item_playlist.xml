@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/play_list_image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/def_playlist_image"
+                android:src="@drawable/image_32"
                 tools:ignore="ImageContrastCheck" />
 
         </androidx.cardview.widget.CardView>
