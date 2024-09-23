@@ -10,7 +10,10 @@ import com.example.facedetection.R
 import com.example.facedetection.data.model.PlaylistWithUser
 import com.example.facedetection.databinding.ItemPlaylistBinding
 
-class PlaylistAdapter(private val playlistsWithUsers: List<PlaylistWithUser>) :
+class PlaylistAdapter(
+    private val playlistsWithUsers: List<PlaylistWithUser>,
+    private val onAddListClick: (String) -> Unit
+) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistAdapterViewHolder>() {
 
     inner class PlaylistAdapterViewHolder(val binding: ItemPlaylistBinding) :
@@ -49,12 +52,16 @@ class PlaylistAdapter(private val playlistsWithUsers: List<PlaylistWithUser>) :
                 holder.itemView.context.startActivity(intent)
             }
 
-            root.setOnClickListener {
+            imageButtonPlay.setOnClickListener {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse(playlistWithUser.playlist.externalUrls.spotify)
                 )
                 holder.itemView.context.startActivity(intent)
+            }
+
+            imageButtonAdd.setOnClickListener {
+                onAddListClick(playlistWithUser.playlist.id)
             }
         }
 
