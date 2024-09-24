@@ -57,7 +57,13 @@ data class PlaylistWithUser(
 )
 
 data class FollowPlaylistRequest(
-    val public: Boolean
+    @SerializedName("public")
+    val public: Boolean,
+)
+
+data class FollowTrackRequest(
+    @SerializedName("ids")
+    val ids: List<String>,
 )
 
 data class TrackResponse(

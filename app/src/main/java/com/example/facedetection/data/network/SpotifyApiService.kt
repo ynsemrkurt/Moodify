@@ -1,6 +1,7 @@
 package com.example.facedetection.data.network
 
 import com.example.facedetection.data.model.FollowPlaylistRequest
+import com.example.facedetection.data.model.FollowTrackRequest
 import com.example.facedetection.data.model.SpotifySearchResponse
 import com.example.facedetection.data.model.TrackResponse
 import com.example.facedetection.data.model.User
@@ -40,8 +41,16 @@ interface SpotifyApiService {
         @Path("playlist_id") playlistId: String,
         @Body followPlaylistRequest: FollowPlaylistRequest = FollowPlaylistRequest(false)
     )
+
+    @PUT(FOLLOW_TRACK)
+    suspend fun followTrack(
+        @Header("Authorization") token: String,
+        @Query("ids") ids: List<String>,
+        @Body followTrackRequest: FollowTrackRequest,
+    )
 }
 
 const val SEARCH = "search"
 const val SEARCH_USER = "users/{user_id}"
 const val FOLLOW_PLAYLIST = "playlists/{playlist_id}/followers"
+const val FOLLOW_TRACK = "me/tracks"
