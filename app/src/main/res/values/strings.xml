@@ -35,4 +35,8 @@
     <string name="add_track_in_playlist">add track in playlist</string>
     <string name="track_followed_successfully">Track Followed Successfully</string>
     <string name="failed_to_follow_track">Failed To Follow Track</string>
+    <string name="imageCamera">Open Camera</string>
+    <string name="camera_permission_denied">Camera permission denied. Permissions granted from settings.</string>
+    <string name="settings">Setting</string>
+    <string name="text_mood_detail">•Keep Your Face Clear\n\n• Use Good Lighting\n\n• Simple Background\n\n• Avoid Accessories\n\n• Face Fully Visible</string>
 </resources>
