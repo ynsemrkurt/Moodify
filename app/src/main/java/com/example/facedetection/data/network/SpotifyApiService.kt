@@ -2,8 +2,10 @@ package com.example.facedetection.data.network
 
 import com.example.facedetection.data.model.FollowPlaylistRequest
 import com.example.facedetection.data.model.SpotifySearchResponse
+import com.example.facedetection.data.model.TrackResponse
 import com.example.facedetection.data.model.User
-import com.example.facedetection.ui.utils.Spotify.DEF_TYPE
+import com.example.facedetection.ui.utils.SearchType.PLAYLIST
+import com.example.facedetection.ui.utils.SearchType.TRACKS
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -16,8 +18,15 @@ interface SpotifyApiService {
     suspend fun searchPlaylists(
         @Header("Authorization") token: String,
         @Query("q") query: String,
-        @Query("type") type: String = DEF_TYPE,
+        @Query("type") type: String = PLAYLIST,
     ): SpotifySearchResponse
+
+    @GET(SEARCH)
+    suspend fun searchTracks(
+        @Header("Authorization") token: String,
+        @Query("q") query: String,
+        @Query("type") type: String = TRACKS,
+    ): TrackResponse
 
     @GET(SEARCH_USER)
     suspend fun getUser(

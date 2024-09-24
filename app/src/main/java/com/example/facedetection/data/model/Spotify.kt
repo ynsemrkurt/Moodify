@@ -59,3 +59,38 @@ data class PlaylistWithUser(
 data class FollowPlaylistRequest(
     val public: Boolean
 )
+
+data class TrackResponse(
+    @SerializedName("tracks")
+    val tracks: Tracks
+)
+
+data class Tracks(
+    @SerializedName("items")
+    val items: List<TrackItem>
+)
+
+data class TrackItem(
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("external_urls")
+    val externalUrls: ExternalUrls,
+    @SerializedName("artists")
+    val artists: List<Artist>,
+    @SerializedName("album")
+    val album: Album,
+)
+
+data class Album(
+    @SerializedName("images")
+    val images: List<Image>,
+)
+
+data class Artist(
+    @SerializedName("external_urls")
+    val externalUrls: ExternalUrls,
+    @SerializedName("name")
+    val name: String,
+)
