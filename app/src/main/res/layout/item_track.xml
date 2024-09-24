@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/spacer_16"
@@ -37,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacer_8"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewMenu"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonAdd"
             app:layout_constraintStart_toEndOf="@+id/cardViewTrack"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -68,15 +67,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/imageViewMenu"
-            android:layout_width="@dimen/spacer_24"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/menu"
-            android:src="@drawable/three_dot"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewTrackName"
+        <ImageButton
+            android:id="@+id/imageButtonAdd"
+            android:layout_width="@dimen/spacer_32"
+            android:layout_height="@dimen/spacer_32"
+            android:background="@color/transparent"
+            android:contentDescription="@string/add_track_in_playlist"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textViewTrackName"
+            app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

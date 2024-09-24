@@ -47,7 +47,7 @@ class PlaylistAdapter(
             imageViewProfile.setOnClickListener {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(playlistWithUser.playlist.externalUrls.spotify)
+                    Uri.parse(playlistWithUser.user.externalUrls.spotify)
                 )
                 holder.itemView.context.startActivity(intent)
             }

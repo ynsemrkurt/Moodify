@@ -11,7 +11,10 @@ import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentListBinding
 import com.example.facedetection.ui.adapter.PlaylistAdapter
 import com.example.facedetection.ui.adapter.TrackAdapter
-import com.example.facedetection.ui.utils.GenreLists
+import com.example.facedetection.ui.utils.GenreLists.happyGenres
+import com.example.facedetection.ui.utils.GenreLists.neutralGenres
+import com.example.facedetection.ui.utils.GenreLists.sadGenres
+import com.example.facedetection.ui.utils.GenreLists.tiredGenres
 import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.Mood.HAPPY
 import com.example.facedetection.ui.utils.Mood.SAD
@@ -37,8 +40,6 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         searchList()
         searchTracks()
         observePlaylistsWithUsers()
@@ -63,10 +64,10 @@ class ListFragment : Fragment() {
 
     private fun getGenresForMood(mood: String): String {
         return when (mood) {
-            HAPPY -> GenreLists.happyGenres
-            SAD -> GenreLists.sadGenres
-            TIRED -> GenreLists.tiredGenres
-            else -> GenreLists.neutralGenres
+            HAPPY -> happyGenres
+            SAD -> sadGenres
+            TIRED -> tiredGenres
+            else -> neutralGenres
         }.random()
     }
 

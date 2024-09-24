@@ -68,7 +68,7 @@
             android:maxLines="1"
             android:text="@string/kurt_playlist"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewProfile"
-            app:layout_constraintEnd_toEndOf="@+id/textViewListName"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonAdd"
             app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
             app:layout_constraintTop_toTopOf="@+id/imageViewProfile" />
 

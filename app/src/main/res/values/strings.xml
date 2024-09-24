@@ -31,4 +31,5 @@
     <string name="menu">menü</string>
     <string name="playlist">Playlist:</string>
     <string name="track">Track:</string>
+    <string name="add_track_in_playlist">add track in playlist</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.facedetection.ui.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,22 @@ class TrackAdapter(
                 .placeholder(R.drawable.image_32)
                 .error(R.drawable.image_32)
                 .into(imageViewTrack)
+
+            root.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(tracks.externalUrls.spotify)
+                )
+                holder.itemView.context.startActivity(intent)
+            }
+
+            textViewTrackArtist.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(tracks.artists.firstOrNull()?.externalUrls?.spotify)
+                )
+                holder.itemView.context.startActivity(intent)
+            }
         }
 
     override fun getItemCount(): Int = tracks.size
