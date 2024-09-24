@@ -12,6 +12,7 @@ object Spotify {
     const val TOKEN_KEY = "Token_Key"
     const val MODIFY_PLAYLIST_PRIVATE_KEY = "playlist-modify-private"
     const val MODIFY_PLAYLIST_PUBLIC_KEY = "playlist-modify-public"
+    const val MODIFY_LIBRARY_KEY = "user-library-modify"
     const val TOKEN_TYPE = "Bearer "
     const val GENRE_TYPE = "genre:"
 }

@@ -10,6 +10,7 @@ import com.example.facedetection.BuildConfig
 import com.example.facedetection.R
 import com.example.facedetection.ui.fragment.MoodFragment
 import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.utils.Spotify.MODIFY_LIBRARY_KEY
 import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PRIVATE_KEY
 import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PUBLIC_KEY
 import com.spotify.sdk.android.auth.AuthorizationClient
@@ -26,11 +27,13 @@ class MainActivity : AppCompatActivity() {
 
     fun loginWithSpotify() {
         val builder = AuthorizationRequest.Builder(
-            BuildConfig.CLIENT_ID,
-            AuthorizationResponse.Type.TOKEN,
-            BuildConfig.REDIRECT_URI
+            BuildConfig.CLIENT_ID, AuthorizationResponse.Type.TOKEN, BuildConfig.REDIRECT_URI
         )
-        builder.setScopes(arrayOf(MODIFY_PLAYLIST_PRIVATE_KEY, MODIFY_PLAYLIST_PUBLIC_KEY))
+        builder.setScopes(
+            arrayOf(
+                MODIFY_LIBRARY_KEY, MODIFY_PLAYLIST_PRIVATE_KEY, MODIFY_PLAYLIST_PUBLIC_KEY
+            )
+        )
         val request = builder.build()
 
         AuthorizationClient.openLoginInBrowser(this, request)
@@ -52,9 +55,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, moodFragment)
-                        .addToBackStack(null)
-                        .commit()
+                        .replace(R.id.fragmentContainer, moodFragment).addToBackStack(null).commit()
                 }
 
                 AuthorizationResponse.Type.ERROR -> {
