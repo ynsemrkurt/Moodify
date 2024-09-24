@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.facedetection.R
+import com.example.facedetection.data.model.FollowTrackRequest
 import com.example.facedetection.data.model.PlaylistWithUser
 import com.example.facedetection.data.model.TrackItem
 import com.example.facedetection.data.network.SpotifyRetrofitInstance
@@ -75,6 +76,22 @@ class ListViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _result.value = R.string.failed_to_follow_playlist
+            }
+        }
+    }
+
+    fun followTrack(trackId: String, accessToken: String) {
+        viewModelScope.launch {
+            try {
+                spotifyApiService.followTrack(
+                    TOKEN_TYPE + accessToken,
+                    listOf(trackId),
+                    FollowTrackRequest(listOf(trackId))
+                )
+                _result.value = R.string.track_followed_successfully
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _result.value = R.string.failed_to_follow_track
             }
         }
     }
