@@ -3,22 +3,43 @@ package com.example.facedetection.ui.utils
 object GenreLists {
 
     val happyGenres = listOf(
-        "afrobeat", "bossa nova", "dance", "disco", "funk", "party", "pop",
-        "power-pop", "salsa", "samba", "sertanejo", "tango", "tropical"
+        "dance",
+        "disco",
+        "funk",
+        "party",
+        "pop",
+        "power-pop",
+        "tropical"
     )
 
     val sadGenres = listOf(
-        "blues", "emo", "sad", "gospel", "goth", "folk",
-        "singer-songwriter", "rainy-day", "ambient"
+        "blues",
+        "emo",
+        "sad",
+        "folk",
+        "singer-songwriter",
+        "rainy"
     )
 
     val tiredGenres = listOf(
-        "acoustic", "chill", "lo-fi", "jazz", "classical", "sleep",
-        "study", "new-age", "minimal-techno", "ambient"
+        "acoustic",
+        "chill",
+        "lo-fi",
+        "jazz",
+        "classical",
+        "sleep",
+        "study",
+        "ambient"
     )
 
     val neutralGenres = listOf(
-        "indie", "alternative", "indie-pop", "rock", "classical", "pop",
-        "electronic", "techno", "soundtracks", "synth-pop", "world-music"
+        "indie",
+        "alternative",
+        "rock",
+        "classical",
+        "pop",
+        "soundtracks",
+        "synth-pop",
+        "world-music"
     )
 }

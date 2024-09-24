@@ -72,4 +72,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.5")
     implementation("androidx.fragment:fragment-ktx:1.8.3")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
 }
