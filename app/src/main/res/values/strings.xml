@@ -21,4 +21,8 @@
     <string name="descreption">Playlist - made for Kurt</string>
     <string name="made_for">%1$s - made for %2$s</string>
     <string name="kurt_playlist">Kurt - Playlist</string>
+    <string name="imageCamera">Open Camera</string>
+    <string name="camera_permission_denied">Camera permission denied. Permissions granted from settings.</string>
+    <string name="settings">Setting</string>
+    <string name="text_mood_detail">•Keep Your Face Clear\n\n• Use Good Lighting\n\n• Simple Background\n\n• Avoid Accessories\n\n• Face Fully Visible</string>
 </resources>
