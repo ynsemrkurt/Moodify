@@ -40,6 +40,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setMoodFace()
         searchList()
         searchTracks()
         observePlaylistsWithUsers()
@@ -47,9 +48,18 @@ class ListFragment : Fragment() {
         observeTracks()
     }
 
+    private fun setMoodFace() {
+        mood = arguments?.getString(Mood.MOOD).toString()
+        when (mood) {
+            HAPPY -> binding.imageViewFace.setImageResource(R.drawable.happy_face)
+            SAD -> binding.imageViewFace.setImageResource(R.drawable.sad_face)
+            TIRED -> binding.imageViewFace.setImageResource(R.drawable.tired_face)
+            else -> binding.imageViewFace.setImageResource(R.drawable.nuetral_face)
+        }
+    }
+
     private fun searchList() {
         accessToken = arguments?.getString(Spotify.TOKEN_KEY).toString()
-        mood = arguments?.getString(Mood.MOOD).toString()
 
         val genres = getGenresForMood(mood)
 
