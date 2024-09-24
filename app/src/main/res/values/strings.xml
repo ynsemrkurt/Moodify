@@ -27,4 +27,8 @@
     <string name="successful_text">Your playlist has been added to your library.\nWould you like to open your library?</string>
     <string name="stay_in_moodify">Stay in Moodify</string>
     <string name="open_in_spotify">Open in Spotify</string>
+    <string name="eminem">Eminem</string>
+    <string name="menu">menü</string>
+    <string name="playlist">Playlist:</string>
+    <string name="track">Track:</string>
 </resources>
