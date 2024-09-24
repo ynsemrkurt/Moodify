@@ -3,6 +3,8 @@ package com.example.facedetection.ui.viewModel
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,8 +14,6 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
-import android.os.Handler
-import android.os.Looper
 
 class MoodViewModel : ViewModel() {
     private val _mood = MutableLiveData<String>()

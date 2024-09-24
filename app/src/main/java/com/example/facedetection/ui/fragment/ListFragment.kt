@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.facedetection.R
@@ -20,6 +19,7 @@ import com.example.facedetection.ui.utils.Mood.HAPPY
 import com.example.facedetection.ui.utils.Mood.SAD
 import com.example.facedetection.ui.utils.Mood.TIRED
 import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.utils.showToast
 import com.example.facedetection.ui.viewModel.ListViewModel
 
 class ListFragment : Fragment() {
@@ -50,22 +50,20 @@ class ListFragment : Fragment() {
 
     private fun setMoodFace() {
         mood = arguments?.getString(Mood.MOOD).toString()
-        when (mood) {
-            HAPPY -> binding.imageViewFace.setImageResource(R.drawable.happy_face)
-            SAD -> binding.imageViewFace.setImageResource(R.drawable.sad_face)
-            TIRED -> binding.imageViewFace.setImageResource(R.drawable.tired_face)
-            else -> binding.imageViewFace.setImageResource(R.drawable.nuetral_face)
-        }
+        binding.imageViewFace.setImageResource(moodFaceMap[mood] ?: R.drawable.nuetral_face)
     }
+
+    private val moodFaceMap = mapOf(
+        HAPPY to R.drawable.happy_face,
+        SAD to R.drawable.sad_face,
+        TIRED to R.drawable.tired_face
+    )
 
     private fun searchList() {
         accessToken = arguments?.getString(Spotify.TOKEN_KEY).toString()
-
         val genres = getGenresForMood(mood)
 
-        accessToken.let { token ->
-            viewModel.searchPlaylistsAndUsers(genres, token)
-        }
+        viewModel.searchPlaylistsAndUsers(genres, accessToken)
     }
 
     private fun searchTracks() {
@@ -83,11 +81,10 @@ class ListFragment : Fragment() {
 
     private fun observePlaylistsWithUsers() {
         viewModel.playlistsWithUsers.observe(viewLifecycleOwner) { playlistsWithUsers ->
-            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers,
-                onAddListClick = { playlistId ->
+            binding.recyclerViewPlayList.adapter =
+                PlaylistAdapter(playlistsWithUsers) { playlistId ->
                     viewModel.followPlaylist(playlistId, accessToken)
                 }
-            )
             binding.recyclerViewPlayList.apply {
                 set3DItem(true)
                 setAlpha(true)
@@ -97,10 +94,9 @@ class ListFragment : Fragment() {
 
     private fun observeTracks() {
         viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            binding.recyclerViewTrack.adapter = TrackAdapter(tracks,
-                onAddTrackClick = { trackId ->
-                    viewModel.followTrack(trackId, accessToken)
-                })
+            binding.recyclerViewTrack.adapter = TrackAdapter(tracks) { trackId ->
+                viewModel.followTrack(trackId, accessToken)
+            }
             binding.recyclerViewTrack.apply {
                 set3DItem(true)
                 setAlpha(true)
@@ -110,12 +106,13 @@ class ListFragment : Fragment() {
 
     private fun observeResult() {
         viewModel.result.observe(viewLifecycleOwner) { result ->
-            when (result) {
+            val message = when (result) {
                 R.string.playlist_followed_successfully -> {
                     SuccessDialogFragment(isTrackAction = false).show(
                         parentFragmentManager,
                         "SuccessDialog"
                     )
+                    null
                 }
 
                 R.string.track_followed_successfully -> {
@@ -123,12 +120,12 @@ class ListFragment : Fragment() {
                         parentFragmentManager,
                         "SuccessDialog"
                     )
+                    null
                 }
 
-                else -> {
-                    Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
-                }
+                else -> result
             }
+            message?.let { requireContext().showToast(getString(it)) }
         }
     }
 }

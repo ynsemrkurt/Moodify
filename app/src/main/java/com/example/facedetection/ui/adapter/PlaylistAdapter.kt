@@ -1,20 +1,18 @@
 package com.example.facedetection.ui.adapter
 
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.facedetection.R
 import com.example.facedetection.data.model.PlaylistWithUser
 import com.example.facedetection.databinding.ItemPlaylistBinding
+import com.example.facedetection.ui.utils.loadImage
+import com.example.facedetection.ui.utils.openUrlInBrowser
 
 class PlaylistAdapter(
     private val playlistsWithUsers: List<PlaylistWithUser>,
     private val onAddListClick: (String) -> Unit
-) :
-    RecyclerView.Adapter<PlaylistAdapter.PlaylistAdapterViewHolder>() {
+) : RecyclerView.Adapter<PlaylistAdapter.PlaylistAdapterViewHolder>() {
 
     inner class PlaylistAdapterViewHolder(val binding: ItemPlaylistBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -32,32 +30,24 @@ class PlaylistAdapter(
             textViewListName.text = playlistWithUser.playlist.name
             textViewListArtist.text = playlistWithUser.user.displayName
 
-            Glide.with(holder.itemView.context)
-                .load(playlistWithUser.user.images.firstOrNull()?.url)
-                .placeholder(R.drawable.man_profile)
-                .error(R.drawable.man_profile)
-                .into(imageViewProfile)
+            imageViewProfile.loadImage(
+                playlistWithUser.user.images.firstOrNull()?.url,
+                R.drawable.man_profile,
+                R.drawable.man_profile
+            )
 
-            Glide.with(holder.itemView.context)
-                .load(playlistWithUser.playlist.images.firstOrNull()?.url)
-                .placeholder(R.drawable.image_32)
-                .error(R.drawable.image_32)
-                .into(imageViewList)
+            imageViewList.loadImage(
+                playlistWithUser.playlist.images.firstOrNull()?.url,
+                R.drawable.image_32,
+                R.drawable.image_32
+            )
 
             imageViewProfile.setOnClickListener {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(playlistWithUser.user.externalUrls.spotify)
-                )
-                holder.itemView.context.startActivity(intent)
+                holder.itemView.context.openUrlInBrowser(playlistWithUser.user.externalUrls.spotify)
             }
 
             imageButtonPlay.setOnClickListener {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(playlistWithUser.playlist.externalUrls.spotify)
-                )
-                holder.itemView.context.startActivity(intent)
+                holder.itemView.context.openUrlInBrowser(playlistWithUser.playlist.externalUrls.spotify)
             }
 
             imageButtonAdd.setOnClickListener {

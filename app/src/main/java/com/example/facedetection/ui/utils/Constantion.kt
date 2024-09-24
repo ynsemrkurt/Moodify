@@ -18,8 +18,3 @@ object Spotify {
     const val GO_TRACKS = "spotify:collection/tracks"
     const val GO_PLAYLIST = "spotify:collection"
 }
-
-object SearchType {
-    const val PLAYLIST = "playlist"
-    const val TRACKS = "track"
-}

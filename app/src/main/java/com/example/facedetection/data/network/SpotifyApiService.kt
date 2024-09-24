@@ -5,8 +5,11 @@ import com.example.facedetection.data.model.FollowTrackRequest
 import com.example.facedetection.data.model.SpotifySearchResponse
 import com.example.facedetection.data.model.TrackResponse
 import com.example.facedetection.data.model.User
-import com.example.facedetection.ui.utils.SearchType.PLAYLIST
-import com.example.facedetection.ui.utils.SearchType.TRACKS
+import com.example.facedetection.data.network.ApiConstants.FOLLOW_PLAYLIST
+import com.example.facedetection.data.network.ApiConstants.FOLLOW_TRACK
+import com.example.facedetection.data.network.ApiConstants.SEARCH
+import com.example.facedetection.data.network.ApiConstants.SEARCH_USER
+import com.example.facedetection.ui.utils.SearchType
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -19,14 +22,14 @@ interface SpotifyApiService {
     suspend fun searchPlaylists(
         @Header("Authorization") token: String,
         @Query("q") query: String,
-        @Query("type") type: String = PLAYLIST,
+        @Query("type") type: String = SearchType.PLAYLIST.type,
     ): SpotifySearchResponse
 
     @GET(SEARCH)
     suspend fun searchTracks(
         @Header("Authorization") token: String,
         @Query("q") query: String,
-        @Query("type") type: String = TRACKS,
+        @Query("type") type: String = SearchType.TRACKS.type,
     ): TrackResponse
 
     @GET(SEARCH_USER)
@@ -50,7 +53,9 @@ interface SpotifyApiService {
     )
 }
 
-const val SEARCH = "search"
-const val SEARCH_USER = "users/{user_id}"
-const val FOLLOW_PLAYLIST = "playlists/{playlist_id}/followers"
-const val FOLLOW_TRACK = "me/tracks"
+object ApiConstants {
+    const val SEARCH = "search"
+    const val SEARCH_USER = "users/{user_id}"
+    const val FOLLOW_PLAYLIST = "playlists/{playlist_id}/followers"
+    const val FOLLOW_TRACK = "me/tracks"
+}
