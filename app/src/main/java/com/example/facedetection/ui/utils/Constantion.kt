@@ -14,9 +14,9 @@ object Spotify {
     const val MODIFY_PLAYLIST_PUBLIC_KEY = "playlist-modify-public"
     const val TOKEN_TYPE = "Bearer "
     const val GENRE_TYPE = "genre:"
-    const val DEF_TYPE = "Unknown"
 }
 
 object SearchType {
     const val PLAYLIST = "playlist"
+    const val TRACKS = "track"
 }
