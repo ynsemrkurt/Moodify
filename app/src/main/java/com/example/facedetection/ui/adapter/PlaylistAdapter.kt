@@ -30,7 +30,7 @@ class PlaylistAdapter(
             val playlistWithUser = playlistsWithUsers[position]
 
             textViewListName.text = playlistWithUser.playlist.name
-            textViewListDescription.text = playlistWithUser.user.displayName
+            textViewListArtist.text = playlistWithUser.user.displayName
 
             Glide.with(holder.itemView.context)
                 .load(playlistWithUser.user.images.firstOrNull()?.url)

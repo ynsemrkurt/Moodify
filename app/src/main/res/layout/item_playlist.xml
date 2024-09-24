@@ -10,8 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background">
+        android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewList"
@@ -60,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewListName" />
 
         <TextView
-            android:id="@+id/textViewListDescription"
+            android:id="@+id/textViewListArtist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/spacer_8"
