@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.facedetection.R
 import com.example.facedetection.databinding.SuccessfulDialogBinding
 
-class SuccessDialogFragment : DialogFragment() {
+class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment() {
 
     private lateinit var binding: SuccessfulDialogBinding
 
@@ -19,13 +20,23 @@ class SuccessDialogFragment : DialogFragment() {
     ): View {
         binding = SuccessfulDialogBinding.inflate(inflater, container, false)
 
-        binding.dismissButton.setOnClickListener {
+        binding.goSpotifyButton.setOnClickListener {
+            val intent = if (isTrackAction) {
+                Intent(Intent.ACTION_VIEW, Uri.parse("spotify:collection/tracks"))
+            } else {
+                Intent(Intent.ACTION_VIEW, Uri.parse("spotify:collection"))
+            }
+            startActivity(intent)
             dismiss()
         }
 
-        binding.goSpotifyButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("spotify:library"))
-            startActivity(intent)
+        binding.textViewSuccess.text = if (isTrackAction) {
+            getString(R.string.successful_track_text)
+        } else {
+            getString(R.string.successful_text)
+        }
+
+        binding.dismissButton.setOnClickListener {
             dismiss()
         }
 
