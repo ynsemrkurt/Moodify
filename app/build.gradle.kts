@@ -73,4 +73,5 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.3")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
+    implementation("com.google.android.gms:play-services-ads:23.3.0")
 }

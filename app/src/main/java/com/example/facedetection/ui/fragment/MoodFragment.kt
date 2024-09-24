@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
+import com.example.facedetection.ui.utils.AdManager
 import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.PermissionManager
 import com.example.facedetection.ui.utils.Spotify
@@ -32,6 +33,7 @@ class MoodFragment : Fragment() {
     private var token: String? = null
     private lateinit var permissionManager: PermissionManager
     private val REQUEST_IMAGE_CAPTURE = 101
+    private lateinit var adManager: AdManager
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
@@ -56,6 +58,8 @@ class MoodFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         permissionManager = PermissionManager(requireActivity())
 
+        adManager = AdManager(requireActivity())
+        adManager.loadRewardedAd()
         setupListeners()
         observeViewModel()
     }
@@ -65,7 +69,6 @@ class MoodFragment : Fragment() {
             if (permissionManager.checkCameraPermission()) {
                 openCamera()
             } else {
-
                 permissionManager.requestCameraPermission()
             }
         }
@@ -79,6 +82,15 @@ class MoodFragment : Fragment() {
         }
     }
 
+    private fun openCamera() {
+        adManager.showAdIfAvailable {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
+            }
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
     private fun observeViewModel() {
         moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
             navigateToListFragment(mood)
@@ -89,35 +101,12 @@ class MoodFragment : Fragment() {
         }
     }
 
-    private fun openCamera() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
-        }
-        takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        permissionManager.handlePermissionsResult(
-            requestCode,
-            grantResults,
-            onPermissionGranted = { openCamera() },
-            onPermissionDenied = {
-            }
-        )
     }
 
     private fun checkAndRequestPermissions() {

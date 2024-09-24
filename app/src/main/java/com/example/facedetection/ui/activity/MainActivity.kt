@@ -14,9 +14,13 @@ import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PRIVATE_KEY
 import com.example.facedetection.ui.utils.Spotify.MODIFY_PLAYLIST_PUBLIC_KEY
 import com.example.facedetection.ui.utils.replaceFragment
 import com.example.facedetection.ui.utils.showToast
+import com.google.android.gms.ads.MobileAds
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        val backgroundScope = CoroutineScope(Dispatchers.IO)
+        backgroundScope.launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(this@MainActivity) {}
+        }
     }
 
     fun loginWithSpotify() {
