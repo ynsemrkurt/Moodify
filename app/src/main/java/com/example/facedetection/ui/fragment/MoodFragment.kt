@@ -27,35 +27,19 @@ import com.example.facedetection.ui.utils.PermissionManager
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.viewModel.MoodViewModel
 import com.google.android.material.snackbar.Snackbar
-
 class MoodFragment : Fragment() {
 
     private lateinit var binding: FragmentMoodBinding
     private val moodViewModel: MoodViewModel by viewModels()
-    private var loadingDialog: AlertDialog? = null
     private var token: String? = null
     private lateinit var permissionManager: PermissionManager
     private val REQUEST_IMAGE_CAPTURE = 101
 
-    private fun showLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.VISIBLE
-        binding.imageView.visibility = View.GONE
-    }
 
-    private fun hideLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.GONE
-        binding.imageView.visibility = View.VISIBLE
-    }
-    private fun onImageSelected() {
-        hideLoadingAnimation()
-    }
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
         uri?.let {
-            binding.imageView.setImageURI(it)
-            showLoadingDialog()
             moodViewModel.analyzeSelectedImage(requireContext(), it)
-            onImageSelected()
         } ?: run {
             binding.moodTextView.text = getString(R.string.no_photo_selected)
         }
@@ -96,19 +80,16 @@ class MoodFragment : Fragment() {
     private fun observeViewModel() {
         moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
             navigateToListFragment(mood)
-            dismissLoadingDialog()
         }
 
         moodViewModel.error.observe(viewLifecycleOwner) { error ->
             binding.moodTextView.text = error
-            dismissLoadingDialog()
         }
     }
 
     private fun openCamera() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                showLoadingAnimation()
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
@@ -118,10 +99,7 @@ class MoodFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            binding.imageView.setImageBitmap(imageBitmap)
-            showLoadingDialog()
             moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
-            hideLoadingAnimation()
         }
     }
 
@@ -143,9 +121,10 @@ class MoodFragment : Fragment() {
             Snackbar.LENGTH_LONG
         )
         snackbar.setAction(getString(R.string.settings)) {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", requireActivity().packageName, null)
-            intent.data = uri
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                data = uri
+            }
             startActivity(intent)
         }
         snackbar.show()
@@ -170,22 +149,6 @@ class MoodFragment : Fragment() {
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 102)
-    }
-
-    private fun showLoadingDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.loading_dialog, null)
-        loadingDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-        loadingDialog?.show()
-
-        moodViewModel.executeWithDelay(5000L) {
-            dismissLoadingDialog()
-        }
-    }
-
-    private fun dismissLoadingDialog() {
-        loadingDialog?.dismiss()
     }
 
     private fun navigateToListFragment(mood: String) {
