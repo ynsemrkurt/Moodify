@@ -87,7 +87,10 @@ class ListFragment : Fragment() {
 
     private fun observeTracks() {
         viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            binding.recyclerViewTrack.adapter = TrackAdapter(tracks)
+            binding.recyclerViewTrack.adapter = TrackAdapter(tracks,
+                onAddTrackClick = { trackId ->
+                    viewModel.followTrack(trackId, accessToken)
+                })
             binding.recyclerViewTrack.apply {
                 set3DItem(true)
                 setAlpha(true)
@@ -97,10 +100,24 @@ class ListFragment : Fragment() {
 
     private fun observeResult() {
         viewModel.result.observe(viewLifecycleOwner) { result ->
-            if (result == R.string.playlist_followed_successfully) {
-                SuccessDialogFragment().show(parentFragmentManager, "SuccessDialog")
-            } else {
-                Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
+            when (result) {
+                R.string.playlist_followed_successfully -> {
+                    SuccessDialogFragment(isTrackAction = false).show(
+                        parentFragmentManager,
+                        "SuccessDialog"
+                    )
+                }
+
+                R.string.track_followed_successfully -> {
+                    SuccessDialogFragment(isTrackAction = true).show(
+                        parentFragmentManager,
+                        "SuccessDialog"
+                    )
+                }
+
+                else -> {
+                    Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

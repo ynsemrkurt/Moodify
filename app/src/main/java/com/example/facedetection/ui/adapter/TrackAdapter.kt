@@ -11,7 +11,8 @@ import com.example.facedetection.data.model.TrackItem
 import com.example.facedetection.databinding.ItemTrackBinding
 
 class TrackAdapter(
-    private val tracks: List<TrackItem>
+    private val tracks: List<TrackItem>,
+    private val onAddTrackClick: (String) -> Unit
 ) :
     RecyclerView.Adapter<TrackAdapter.TrackAdapterViewHolder>() {
 
@@ -51,6 +52,10 @@ class TrackAdapter(
                     Uri.parse(tracks.artists.firstOrNull()?.externalUrls?.spotify)
                 )
                 holder.itemView.context.startActivity(intent)
+            }
+
+            imageButtonAdd.setOnClickListener {
+                onAddTrackClick(tracks.id)
             }
         }
 
