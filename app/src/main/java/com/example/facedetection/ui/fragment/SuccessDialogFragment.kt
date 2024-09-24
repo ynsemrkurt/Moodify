@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.facedetection.R
 import com.example.facedetection.databinding.SuccessfulDialogBinding
+import com.example.facedetection.ui.utils.Spotify.GO_PLAYLIST
+import com.example.facedetection.ui.utils.Spotify.GO_TRACKS
 
 class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment() {
 
@@ -22,9 +24,9 @@ class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment
 
         binding.goSpotifyButton.setOnClickListener {
             val intent = if (isTrackAction) {
-                Intent(Intent.ACTION_VIEW, Uri.parse("spotify:collection/tracks"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(GO_TRACKS))
             } else {
-                Intent(Intent.ACTION_VIEW, Uri.parse("spotify:collection"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(GO_PLAYLIST))
             }
             startActivity(intent)
             dismiss()

@@ -15,6 +15,8 @@ object Spotify {
     const val MODIFY_LIBRARY_KEY = "user-library-modify"
     const val TOKEN_TYPE = "Bearer "
     const val GENRE_TYPE = "genre:"
+    const val GO_TRACKS = "spotify:collection/tracks"
+    const val GO_PLAYLIST = "spotify:collection"
 }
 
 object SearchType {
