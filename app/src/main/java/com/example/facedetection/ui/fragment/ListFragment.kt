@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentListBinding
 import com.example.facedetection.ui.adapter.PlaylistAdapter
+import com.example.facedetection.ui.adapter.TrackAdapter
 import com.example.facedetection.ui.utils.GenreLists
 import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.Mood.HAPPY
@@ -23,6 +24,7 @@ class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
     private val viewModel: ListViewModel by viewModels()
     private lateinit var accessToken: String
+    private lateinit var mood: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,20 +37,28 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         searchList()
+        searchTracks()
         observePlaylistsWithUsers()
         observeResult()
+        observeTracks()
     }
 
     private fun searchList() {
         accessToken = arguments?.getString(Spotify.TOKEN_KEY).toString()
-        val mood = arguments?.getString(Mood.MOOD).toString()
+        mood = arguments?.getString(Mood.MOOD).toString()
 
         val genres = getGenresForMood(mood)
 
         accessToken.let { token ->
             viewModel.searchPlaylistsAndUsers(genres, token)
         }
+    }
+
+    private fun searchTracks() {
+        viewModel.searchTracks(mood, accessToken)
     }
 
     private fun getGenresForMood(mood: String): String {
@@ -68,6 +78,16 @@ class ListFragment : Fragment() {
                 }
             )
             binding.recyclerViewPlayList.apply {
+                set3DItem(true)
+                setAlpha(true)
+            }
+        }
+    }
+
+    private fun observeTracks() {
+        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+            binding.recyclerViewTrack.adapter = TrackAdapter(tracks)
+            binding.recyclerViewTrack.apply {
                 set3DItem(true)
                 setAlpha(true)
             }
