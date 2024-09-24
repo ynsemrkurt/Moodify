@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_margin="@dimen/spacer_16"
-            android:text="•Keep Your Face Clear\n\n• Use Good Lighting\n\n• Simple Background\n\n• Avoid Accessories\n\n• Face Fully Visible"
+            android:text="@string/text_mood_detail"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </com.google.android.material.card.MaterialCardView>

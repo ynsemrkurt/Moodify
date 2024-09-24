@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.Settings
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +24,7 @@ import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.PermissionManager
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.viewModel.MoodViewModel
-import com.google.android.material.snackbar.Snackbar
+
 class MoodFragment : Fragment() {
 
     private lateinit var binding: FragmentMoodBinding
@@ -35,17 +33,20 @@ class MoodFragment : Fragment() {
     private lateinit var permissionManager: PermissionManager
     private val REQUEST_IMAGE_CAPTURE = 101
 
-
-
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-        uri?.let {
-            moodViewModel.analyzeSelectedImage(requireContext(), it)
-        } ?: run {
-            binding.moodTextView.text = getString(R.string.no_photo_selected)
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+            uri?.let {
+                moodViewModel.analyzeSelectedImage(requireContext(), it)
+            } ?: run {
+                binding.moodTextView.text = getString(R.string.no_photo_selected)
+            }
         }
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         token = arguments?.getString(Spotify.TOKEN_KEY)
         binding = FragmentMoodBinding.inflate(inflater)
         return binding.root
@@ -64,6 +65,7 @@ class MoodFragment : Fragment() {
             if (permissionManager.checkCameraPermission()) {
                 openCamera()
             } else {
+
                 permissionManager.requestCameraPermission()
             }
         }
@@ -88,10 +90,11 @@ class MoodFragment : Fragment() {
     }
 
     private fun openCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
+        }
+        takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
@@ -103,31 +106,18 @@ class MoodFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         permissionManager.handlePermissionsResult(
             requestCode,
             grantResults,
             onPermissionGranted = { openCamera() },
             onPermissionDenied = {
-                showPermissionDeniedSnackbar()
             }
         )
-    }
-
-    private fun showPermissionDeniedSnackbar() {
-        val snackbar = Snackbar.make(
-            requireView(),
-            getString(R.string.camera_permission_denied),
-            Snackbar.LENGTH_LONG
-        )
-        snackbar.setAction(getString(R.string.settings)) {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                data = uri
-            }
-            startActivity(intent)
-        }
-        snackbar.show()
     }
 
     private fun checkAndRequestPermissions() {
