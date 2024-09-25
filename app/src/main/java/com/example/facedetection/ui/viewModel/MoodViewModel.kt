@@ -18,11 +18,12 @@ class MoodViewModel : ViewModel() {
     private val _mood = MutableLiveData<String?>()
     val mood: LiveData<String?> = _mood
 
-    private val _error = MutableLiveData<@receiver:StringRes Int>()
-    val error: LiveData<Int> = _error
+    private val _error = MutableLiveData<@receiver:StringRes Int?>()
+    val error: LiveData<Int?> = _error
 
-    fun clearMood() {
+    fun clearModel() {
         _mood.value = null
+        _error.value = null
     }
 
     fun analyzeSelectedImage(context: Context, imageUri: Uri) {

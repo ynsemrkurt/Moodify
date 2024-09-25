@@ -6,8 +6,6 @@
     <string name="mood">Mood: %1$s</string>
     <string name="select_photo_from_gallery">Select Photo from Gallery</string>
     <string name="your_image">Your Image</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_with">Login with</string>
     <string name="welcome_image">welcome image</string>
     <string name="music_plak">music plak</string>
@@ -26,6 +24,7 @@
     <string name="failed_to_follow_playlist">Failed to follow playlist</string>
     <string name="successful_text">Your playlist has been added to your library.\nWould you like to open your library?</string>
     <string name="successful_track_text">The track has been added to your favorites.\nWould you like to open your liked songs?</string>
+    <string name="face_detection_failed_text">Your face could not be detected. Please try again.</string>
     <string name="stay_in_moodify">Stay in Moodify</string>
     <string name="open_in_spotify">Open in Spotify</string>
     <string name="eminem">Eminem</string>
@@ -41,5 +40,7 @@
     <string name="settings">Setting</string>
     <string name="text_mood_detail">•Keep Your Face Clear\n\n• Use Good Lighting\n\n• Simple Background\n\n• Avoid Accessories\n\n• Face Fully Visible</string>
     <string name="open_settings">Open Settings</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="open_gallery">Open Gallery</string>
     <string name="error">Error</string>
 </resources>

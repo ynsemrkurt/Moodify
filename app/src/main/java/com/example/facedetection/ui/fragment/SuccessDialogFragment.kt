@@ -12,7 +12,12 @@ import com.example.facedetection.databinding.SuccessfulDialogBinding
 import com.example.facedetection.ui.utils.Spotify.GO_PLAYLIST
 import com.example.facedetection.ui.utils.Spotify.GO_TRACKS
 
-class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment() {
+class SuccessDialogFragment(
+    private val isTrackAction: Boolean = false,
+    private val isWrong: Boolean = false,
+    private val openGallery: (() -> Unit)? = null,
+    private val openCamera: (() -> Unit)? = null
+) : DialogFragment() {
 
     private lateinit var binding: SuccessfulDialogBinding
 
@@ -23,24 +28,45 @@ class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment
         binding = SuccessfulDialogBinding.inflate(inflater, container, false)
 
         with(binding) {
-            goSpotifyButton.setOnClickListener {
-                val intent = if (isTrackAction) {
-                    Intent(Intent.ACTION_VIEW, Uri.parse(GO_TRACKS))
-                } else {
-                    Intent(Intent.ACTION_VIEW, Uri.parse(GO_PLAYLIST))
+            if (isWrong) {
+                statusAnimation.setAnimation(R.raw.wrong_anim)
+                textViewSuccess.text = getString(R.string.face_detection_failed_text)
+                okayButton.setText(R.string.open_camera)
+                dismissButton.setText(R.string.open_gallery)
+
+                okayButton.setOnClickListener {
+                    openCamera?.let {
+                        it()
+                        dismiss()
+                    }
                 }
-                startActivity(intent)
-                dismiss()
-            }
 
-            textViewSuccess.text = if (isTrackAction) {
-                getString(R.string.successful_track_text)
+                dismissButton.setOnClickListener {
+                    openGallery?.let {
+                        it()
+                        dismiss()
+                    }
+                }
             } else {
-                getString(R.string.successful_text)
-            }
+                okayButton.setOnClickListener {
+                    val intent = if (isTrackAction) {
+                        Intent(Intent.ACTION_VIEW, Uri.parse(GO_TRACKS))
+                    } else {
+                        Intent(Intent.ACTION_VIEW, Uri.parse(GO_PLAYLIST))
+                    }
+                    startActivity(intent)
+                    dismiss()
+                }
 
-            dismissButton.setOnClickListener {
-                dismiss()
+                textViewSuccess.text = if (isTrackAction) {
+                    getString(R.string.successful_track_text)
+                } else {
+                    getString(R.string.successful_text)
+                }
+
+                dismissButton.setOnClickListener {
+                    dismiss()
+                }
             }
         }
 

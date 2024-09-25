@@ -24,6 +24,7 @@ import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.Permission.DATA
 import com.example.facedetection.ui.utils.Permission.FRONT_CAMERA
 import com.example.facedetection.ui.utils.Permission.PACKAGE
+import com.example.facedetection.ui.utils.Permission.SUCCESS
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.utils.getParcelable
 import com.example.facedetection.ui.utils.showSnackbar
@@ -87,34 +88,41 @@ class MoodFragment : Fragment() {
 
     private fun setupListeners() {
         binding.imageBtnSelectPhoto.setOnClickListener {
-            if (checkSelfPermission(
-                    requireContext(), android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                openCamera()
-            } else {
-                requestCameraPermission.launch(android.Manifest.permission.CAMERA)
-            }
+            checkCameraPermission()
         }
 
         binding.selectPhotoButton.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                adManager.showAdIfAvailable {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
-            } else {
-                if (checkSelfPermission(
-                        requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    openGallery()
-                } else {
-                    requestStoragePermission.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                }
-            }
+            checkStoragePermission()
         }
     }
 
+    private fun checkCameraPermission() {
+        if (checkSelfPermission(
+                requireContext(), android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCamera()
+        } else {
+            requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun checkStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            adManager.showAdIfAvailable {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        } else {
+            if (checkSelfPermission(
+                    requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                openGallery()
+            } else {
+                requestStoragePermission.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        }
+    }
 
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
@@ -138,7 +146,16 @@ class MoodFragment : Fragment() {
         }
 
         moodViewModel.error.observe(viewLifecycleOwner) { error ->
-            binding.moodTextView.text = getString(error)
+            error?.let {
+                SuccessDialogFragment(
+                    isWrong = true,
+                    openCamera = ::checkCameraPermission,
+                    openGallery = ::checkStoragePermission
+                ).show(
+                    parentFragmentManager,
+                    SUCCESS
+                )
+            }
         }
     }
 
@@ -174,6 +191,6 @@ class MoodFragment : Fragment() {
         parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer, listFragment)
             .addToBackStack(null).commit()
 
-        moodViewModel.clearMood()
+        moodViewModel.clearModel()
     }
 }
