@@ -21,8 +21,10 @@ import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.example.facedetection.ui.utils.AdManager
 import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.Permission.DATA
+import com.example.facedetection.ui.utils.Permission.FRONT_CAMERA
+import com.example.facedetection.ui.utils.Permission.PACKAGE
 import com.example.facedetection.ui.utils.Spotify
-import com.example.facedetection.ui.utils.Spotify.PACKAGE
 import com.example.facedetection.ui.utils.getParcelable
 import com.example.facedetection.ui.utils.showSnackbar
 import com.example.facedetection.ui.viewModel.MoodViewModel
@@ -116,7 +118,7 @@ class MoodFragment : Fragment() {
 
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra("android.intent.extras.CAMERA_FACING", 1)
+            putExtra(FRONT_CAMERA, 1)
         }
         resultLauncher.launch(takePictureIntent)
     }
@@ -147,7 +149,7 @@ class MoodFragment : Fragment() {
 
     private fun handleActivityResult(data: Intent?) {
         if (data != null) {
-            val imageBitmap: Bitmap? = data.getParcelable("data", Bitmap::class.java)
+            val imageBitmap: Bitmap? = data.getParcelable(DATA, Bitmap::class.java)
             if (imageBitmap != null) {
                 moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
             } else {

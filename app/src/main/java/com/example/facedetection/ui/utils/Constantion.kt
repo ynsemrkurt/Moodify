@@ -17,5 +17,10 @@ object Spotify {
     const val GENRE_TYPE = "genre:"
     const val GO_TRACKS = "spotify:collection/tracks"
     const val GO_PLAYLIST = "spotify:collection"
+}
+
+object Permission {
+    const val FRONT_CAMERA = "android.intent.extras.CAMERA_FACING"
     const val PACKAGE = "package"
+    const val DATA = "data"
 }
