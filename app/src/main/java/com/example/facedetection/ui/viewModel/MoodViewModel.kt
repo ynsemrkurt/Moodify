@@ -73,9 +73,9 @@ class MoodViewModel : ViewModel() {
         val rightEyeOpenProb = face.rightEyeOpenProbability ?: 0.0f
 
         return when {
-            smilingProb > 0.6f -> Mood.HAPPY
-            smilingProb < 0.3f -> Mood.SAD
-            leftEyeOpenProb < 0.5f && rightEyeOpenProb < 0.5f -> Mood.TIRED
+            smilingProb > 0.7f -> Mood.HAPPY
+            smilingProb < 0.2f -> Mood.SAD
+            leftEyeOpenProb < 0.4f && rightEyeOpenProb < 0.4f -> Mood.TIRED
             else -> Mood.NEUTRAL
         }
     }
