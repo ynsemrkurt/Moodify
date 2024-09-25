@@ -1,6 +1,5 @@
 package com.example.facedetection.ui.fragment
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,30 +8,30 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.example.facedetection.ui.utils.AdManager
 import com.example.facedetection.ui.utils.Mood
-import com.example.facedetection.ui.utils.PermissionManager
+import com.example.facedetection.ui.utils.Permission.REQUEST_IMAGE_CAPTURE
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.viewModel.MoodViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MoodFragment : Fragment() {
 
     private lateinit var binding: FragmentMoodBinding
     private val moodViewModel: MoodViewModel by viewModels()
     private var token: String? = null
-    private lateinit var permissionManager: PermissionManager
-    private val REQUEST_IMAGE_CAPTURE = 101
     private lateinit var adManager: AdManager
 
     private val pickMedia =
@@ -44,10 +43,26 @@ class MoodFragment : Fragment() {
             }
         }
 
+    private val requestCameraPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                showSnackbar(R.string.camera_permission_denied)
+            }
+        }
+
+    private val requestStoragePermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                openGallery()
+            } else {
+                showSnackbar(R.string.gallery_permission_denied)
+            }
+        }
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         token = arguments?.getString(Spotify.TOKEN_KEY)
         binding = FragmentMoodBinding.inflate(inflater)
@@ -56,8 +71,6 @@ class MoodFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionManager = PermissionManager(requireActivity())
-
         adManager = AdManager(requireActivity())
         adManager.loadRewardedAd()
         setupListeners()
@@ -66,28 +79,46 @@ class MoodFragment : Fragment() {
 
     private fun setupListeners() {
         binding.imageBtnSelectPhoto.setOnClickListener {
-            if (permissionManager.checkCameraPermission()) {
+            if (checkSelfPermission(
+                    requireContext(), android.Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 openCamera()
             } else {
-                permissionManager.requestCameraPermission()
+                requestCameraPermission.launch(android.Manifest.permission.CAMERA)
             }
         }
 
         binding.selectPhotoButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                adManager.showAdIfAvailable {
+                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
             } else {
-                checkAndRequestPermissions()
+                if (checkSelfPermission(
+                        requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    openGallery()
+                } else {
+                    requestStoragePermission.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
             }
         }
     }
 
+
     private fun openCamera() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra("android.intent.extras.CAMERA_FACING", 1)
+        }
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    }
+
+    private fun openGallery() {
         adManager.showAdIfAvailable {
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-                putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
-            }
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, 102)
         }
     }
 
@@ -106,28 +137,22 @@ class MoodFragment : Fragment() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
+        } else if (requestCode == 102 && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data?.data
+            selectedImageUri?.let {
+                moodViewModel.analyzeSelectedImage(requireContext(), it)
+            }
         }
     }
 
-    private fun checkAndRequestPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                101
-            )
-        } else {
-            openGallery()
-        }
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, 102)
+    private fun showSnackbar(@StringRes message: Int) {
+        Snackbar.make(binding.root, getString(message), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.open_settings)) {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }.show()
     }
 
     private fun navigateToListFragment(mood: String) {
@@ -138,9 +163,7 @@ class MoodFragment : Fragment() {
             }
         }
 
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, listFragment)
-            .addToBackStack(null)
-            .commit()
+        parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer, listFragment)
+            .addToBackStack(null).commit()
     }
 }
