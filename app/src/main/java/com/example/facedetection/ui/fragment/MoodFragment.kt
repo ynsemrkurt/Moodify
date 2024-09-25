@@ -132,11 +132,13 @@ class MoodFragment : Fragment() {
 
     private fun observeViewModel() {
         moodViewModel.mood.observe(viewLifecycleOwner) { mood ->
-            navigateToListFragment(mood)
+            mood?.let {
+                navigateToListFragment(mood)
+            }
         }
 
         moodViewModel.error.observe(viewLifecycleOwner) { error ->
-            binding.moodTextView.text = error
+            binding.moodTextView.text = getString(error)
         }
     }
 
@@ -171,5 +173,7 @@ class MoodFragment : Fragment() {
 
         parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer, listFragment)
             .addToBackStack(null).commit()
+
+        moodViewModel.clearMood()
     }
 }

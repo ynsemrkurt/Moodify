@@ -2,13 +2,12 @@ package com.example.facedetection.ui.viewModel
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
-import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.facedetection.R
 import com.example.facedetection.ui.utils.Mood
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -16,11 +15,15 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
 class MoodViewModel : ViewModel() {
-    private val _mood = MutableLiveData<String>()
-    val mood: LiveData<String> = _mood
+    private val _mood = MutableLiveData<String?>()
+    val mood: LiveData<String?> = _mood
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableLiveData<@receiver:StringRes Int>()
+    val error: LiveData<Int> = _error
+
+    fun clearMood() {
+        _mood.value = null
+    }
 
     fun analyzeSelectedImage(context: Context, imageUri: Uri) {
         try {
@@ -38,22 +41,23 @@ class MoodViewModel : ViewModel() {
                 .addOnSuccessListener { faces ->
                     handleFaceDetectionResult(faces)
                 }
-                .addOnFailureListener { e ->
-                    _error.value = "Error: ${e.message}"
+                .addOnFailureListener {
+                    _error.value = R.string.error
                 }
         } catch (e: Exception) {
             e.printStackTrace()
-            _error.value = "Error: ${e.message}"
+            _error.value = R.string.error
         }
     }
 
     private fun getBitmapFromUri(context: Context, imageUri: Uri): Bitmap {
-        return MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+        val inputStream = context.contentResolver.openInputStream(imageUri)
+        return BitmapFactory.decodeStream(inputStream)
     }
 
     private fun handleFaceDetectionResult(faces: List<Face>) {
         if (faces.isEmpty()) {
-            _error.value = "No face detected"
+            _error.value = R.string.no_face_detected
         } else {
             faces.forEach { face ->
                 val detectedMood = analyzeFaceMood(face)
@@ -75,12 +79,6 @@ class MoodViewModel : ViewModel() {
         }
     }
 
-    fun executeWithDelay(delayMillis: Long, action: () -> Unit) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            action()
-        }, delayMillis)
-    }
-
     fun analyzeSelectedImageFromBitmap(bitmap: Bitmap) {
         try {
             val inputImage = InputImage.fromBitmap(bitmap, 0)
@@ -96,12 +94,12 @@ class MoodViewModel : ViewModel() {
                 .addOnSuccessListener { faces ->
                     handleFaceDetectionResult(faces)
                 }
-                .addOnFailureListener { e ->
-                    _mood.value = "Error: ${e.message}"
+                .addOnFailureListener {
+                    _error.value = R.string.error
                 }
         } catch (e: Exception) {
             e.printStackTrace()
-            _mood.value = "Error: ${e.message}"
+            _error.value = R.string.error
         }
     }
 }
