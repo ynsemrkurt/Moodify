@@ -18,6 +18,7 @@ import com.example.facedetection.ui.utils.Mood
 import com.example.facedetection.ui.utils.Mood.HAPPY
 import com.example.facedetection.ui.utils.Mood.SAD
 import com.example.facedetection.ui.utils.Mood.TIRED
+import com.example.facedetection.ui.utils.Permission.SUCCESS
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.utils.showToast
 import com.example.facedetection.ui.viewModel.ListViewModel
@@ -110,7 +111,7 @@ class ListFragment : Fragment() {
                 R.string.playlist_followed_successfully -> {
                     SuccessDialogFragment(isTrackAction = false).show(
                         parentFragmentManager,
-                        "SuccessDialog"
+                        SUCCESS
                     )
                     null
                 }
@@ -118,7 +119,7 @@ class ListFragment : Fragment() {
                 R.string.track_followed_successfully -> {
                     SuccessDialogFragment(isTrackAction = true).show(
                         parentFragmentManager,
-                        "SuccessDialog"
+                        SUCCESS
                     )
                     null
                 }

@@ -23,4 +23,5 @@ object Permission {
     const val FRONT_CAMERA = "android.intent.extras.CAMERA_FACING"
     const val PACKAGE = "package"
     const val DATA = "data"
+    const val SUCCESS = "SuccessDialog"
 }
