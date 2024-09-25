@@ -17,9 +17,5 @@ object Spotify {
     const val GENRE_TYPE = "genre:"
     const val GO_TRACKS = "spotify:collection/tracks"
     const val GO_PLAYLIST = "spotify:collection"
-}
-
-object Permission {
-    const val REQUEST_IMAGE_CAPTURE = 101
-    const val CAMERA_PERMISSION_CODE = 100
+    const val PACKAGE = "package"
 }

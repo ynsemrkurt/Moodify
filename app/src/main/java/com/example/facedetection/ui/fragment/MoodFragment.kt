@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,10 +21,11 @@ import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentMoodBinding
 import com.example.facedetection.ui.utils.AdManager
 import com.example.facedetection.ui.utils.Mood
-import com.example.facedetection.ui.utils.Permission.REQUEST_IMAGE_CAPTURE
 import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.utils.Spotify.PACKAGE
+import com.example.facedetection.ui.utils.getParcelable
+import com.example.facedetection.ui.utils.showSnackbar
 import com.example.facedetection.ui.viewModel.MoodViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class MoodFragment : Fragment() {
 
@@ -48,7 +48,7 @@ class MoodFragment : Fragment() {
             if (isGranted) {
                 openCamera()
             } else {
-                showSnackbar(R.string.camera_permission_denied)
+                binding.root.showSnackbar(R.string.camera_permission_denied, ::openAppSettings)
             }
         }
 
@@ -57,9 +57,15 @@ class MoodFragment : Fragment() {
             if (isGranted) {
                 openGallery()
             } else {
-                showSnackbar(R.string.gallery_permission_denied)
+                binding.root.showSnackbar(R.string.gallery_permission_denied, ::openAppSettings)
             }
         }
+
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.data = Uri.fromParts(PACKAGE, requireActivity().packageName, null)
+        startActivity(intent)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -112,13 +118,13 @@ class MoodFragment : Fragment() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
             putExtra("android.intent.extras.CAMERA_FACING", 1)
         }
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        resultLauncher.launch(takePictureIntent)
     }
 
     private fun openGallery() {
         adManager.showAdIfAvailable {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, 102)
+            resultLauncher.launch(intent)
         }
     }
 
@@ -132,27 +138,25 @@ class MoodFragment : Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
-        } else if (requestCode == 102 && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri = data?.data
-            selectedImageUri?.let {
-                moodViewModel.analyzeSelectedImage(requireContext(), it)
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                handleActivityResult(result.data)
             }
         }
-    }
 
-    private fun showSnackbar(@StringRes message: Int) {
-        Snackbar.make(binding.root, getString(message), Snackbar.LENGTH_LONG)
-            .setAction(getString(R.string.open_settings)) {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }.show()
+    private fun handleActivityResult(data: Intent?) {
+        if (data != null) {
+            val imageBitmap: Bitmap? = data.getParcelable("data", Bitmap::class.java)
+            if (imageBitmap != null) {
+                moodViewModel.analyzeSelectedImageFromBitmap(imageBitmap)
+            } else {
+                val selectedImageUri = data.data
+                selectedImageUri?.let {
+                    moodViewModel.analyzeSelectedImage(requireContext(), it)
+                }
+            }
+        }
     }
 
     private fun navigateToListFragment(mood: String) {
