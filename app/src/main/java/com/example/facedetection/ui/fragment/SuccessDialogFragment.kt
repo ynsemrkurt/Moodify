@@ -22,24 +22,26 @@ class SuccessDialogFragment(private val isTrackAction: Boolean) : DialogFragment
     ): View {
         binding = SuccessfulDialogBinding.inflate(inflater, container, false)
 
-        binding.goSpotifyButton.setOnClickListener {
-            val intent = if (isTrackAction) {
-                Intent(Intent.ACTION_VIEW, Uri.parse(GO_TRACKS))
-            } else {
-                Intent(Intent.ACTION_VIEW, Uri.parse(GO_PLAYLIST))
+        with(binding) {
+            goSpotifyButton.setOnClickListener {
+                val intent = if (isTrackAction) {
+                    Intent(Intent.ACTION_VIEW, Uri.parse(GO_TRACKS))
+                } else {
+                    Intent(Intent.ACTION_VIEW, Uri.parse(GO_PLAYLIST))
+                }
+                startActivity(intent)
+                dismiss()
             }
-            startActivity(intent)
-            dismiss()
-        }
 
-        binding.textViewSuccess.text = if (isTrackAction) {
-            getString(R.string.successful_track_text)
-        } else {
-            getString(R.string.successful_text)
-        }
+            textViewSuccess.text = if (isTrackAction) {
+                getString(R.string.successful_track_text)
+            } else {
+                getString(R.string.successful_text)
+            }
 
-        binding.dismissButton.setOnClickListener {
-            dismiss()
+            dismissButton.setOnClickListener {
+                dismiss()
+            }
         }
 
         return binding.root
