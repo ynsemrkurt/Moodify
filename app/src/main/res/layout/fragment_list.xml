@@ -6,13 +6,111 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ListFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPlayList"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/item_playlist" />
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacer_32"
+                android:text="@string/app_name"
+                android:textSize="@dimen/text_size_24"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginVertical="@dimen/spacer_16"
+                android:layout_marginStart="@dimen/spacer_24"
+                app:layout_constraintDimensionRatio="3:2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleTextView">
+
+                <ImageView
+                    android:id="@+id/imageViewFace"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/mood"
+                    android:elevation="@dimen/spacer_16"
+                    android:src="@drawable/sad_face"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:elevation="@dimen/spacer_8"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_rawRes="@raw/spotify_anim" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textViewTrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacer_8"
+                android:layout_marginStart="@dimen/spacer_16"
+                android:text="@string/track"
+                android:textSize="@dimen/text_size_24"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/recyclerViewTrack"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+            <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
+                android:id="@+id/recyclerViewTrack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacer_8"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewTrack"
+                tools:listitem="@layout/item_track" />
+
+            <TextView
+                android:id="@+id/textViewPlaylist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacer_16"
+                android:text="@string/playlist"
+                android:textSize="@dimen/text_size_24"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/recyclerViewPlayList"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewTrack" />
+
+            <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
+                android:id="@+id/recyclerViewPlayList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacer_8"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewPlaylist"
+                tools:listitem="@layout/item_playlist" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

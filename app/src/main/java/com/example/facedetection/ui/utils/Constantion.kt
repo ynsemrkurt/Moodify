@@ -10,13 +10,18 @@ object Mood {
 
 object Spotify {
     const val TOKEN_KEY = "Token_Key"
-    const val STREAMING_KEY = "streaming"
+    const val MODIFY_PLAYLIST_PRIVATE_KEY = "playlist-modify-private"
+    const val MODIFY_PLAYLIST_PUBLIC_KEY = "playlist-modify-public"
+    const val MODIFY_LIBRARY_KEY = "user-library-modify"
     const val TOKEN_TYPE = "Bearer "
     const val GENRE_TYPE = "genre:"
-    const val DEF_NAME = "User"
-    const val DEF_TYPE = "Unknown"
+    const val GO_TRACKS = "spotify:collection/tracks"
+    const val GO_PLAYLIST = "spotify:collection"
 }
 
-object SearchType {
-    const val PLAYLIST = "playlist"
+object Permission {
+    const val FRONT_CAMERA = "android.intent.extras.CAMERA_FACING"
+    const val PACKAGE = "package"
+    const val DATA = "data"
+    const val SUCCESS = "SuccessDialog"
 }

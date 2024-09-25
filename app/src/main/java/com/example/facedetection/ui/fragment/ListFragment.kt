@@ -6,17 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.facedetection.R
 import com.example.facedetection.databinding.FragmentListBinding
-import com.example.facedetection.ui.utils.GenreLists
-import com.example.facedetection.ui.viewModel.ListViewModel
-import com.example.facedetection.ui.utils.Mood
-import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.adapter.PlaylistAdapter
+import com.example.facedetection.ui.adapter.TrackAdapter
+import com.example.facedetection.ui.utils.GenreLists.happyGenres
+import com.example.facedetection.ui.utils.GenreLists.neutralGenres
+import com.example.facedetection.ui.utils.GenreLists.sadGenres
+import com.example.facedetection.ui.utils.GenreLists.tiredGenres
+import com.example.facedetection.ui.utils.Mood
+import com.example.facedetection.ui.utils.Mood.HAPPY
+import com.example.facedetection.ui.utils.Mood.SAD
+import com.example.facedetection.ui.utils.Mood.TIRED
+import com.example.facedetection.ui.utils.Permission.SUCCESS
+import com.example.facedetection.ui.utils.Spotify
+import com.example.facedetection.ui.utils.showToast
+import com.example.facedetection.ui.viewModel.ListViewModel
 
 class ListFragment : Fragment() {
 
     private lateinit var binding: FragmentListBinding
     private val viewModel: ListViewModel by viewModels()
+    private lateinit var accessToken: String
+    private lateinit var mood: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,33 +41,92 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setMoodFace()
         searchList()
+        searchTracks()
         observePlaylistsWithUsers()
+        observeResult()
+        observeTracks()
     }
 
-    private fun searchList() {
-        val accessToken = arguments?.getString(Spotify.TOKEN_KEY)
-        val mood = arguments?.getString(Mood.MOOD).toString()
+    private fun setMoodFace() {
+        mood = arguments?.getString(Mood.MOOD).toString()
+        binding.imageViewFace.setImageResource(moodFaceMap[mood] ?: R.drawable.nuetral_face)
+    }
 
+    private val moodFaceMap = mapOf(
+        HAPPY to R.drawable.happy_face,
+        SAD to R.drawable.sad_face,
+        TIRED to R.drawable.tired_face
+    )
+
+    private fun searchList() {
+        accessToken = arguments?.getString(Spotify.TOKEN_KEY).toString()
         val genres = getGenresForMood(mood)
 
-        accessToken?.let { token ->
-            viewModel.searchPlaylistsAndUsers(genres, token)
-        }
+        viewModel.searchPlaylistsAndUsers(genres, accessToken)
+    }
+
+    private fun searchTracks() {
+        viewModel.searchTracks(mood, accessToken)
     }
 
     private fun getGenresForMood(mood: String): String {
         return when (mood) {
-            Mood.HAPPY -> GenreLists.happyGenres
-            Mood.SAD -> GenreLists.sadGenres
-            Mood.TIRED -> GenreLists.tiredGenres
-            else -> GenreLists.neutralGenres
+            HAPPY -> happyGenres
+            SAD -> sadGenres
+            TIRED -> tiredGenres
+            else -> neutralGenres
         }.random()
     }
 
     private fun observePlaylistsWithUsers() {
         viewModel.playlistsWithUsers.observe(viewLifecycleOwner) { playlistsWithUsers ->
-            binding.recyclerViewPlayList.adapter = PlaylistAdapter(playlistsWithUsers)
+            binding.recyclerViewPlayList.adapter =
+                PlaylistAdapter(playlistsWithUsers) { playlistId ->
+                    viewModel.followPlaylist(playlistId, accessToken)
+                }
+            binding.recyclerViewPlayList.apply {
+                set3DItem(true)
+                setAlpha(true)
+            }
+        }
+    }
+
+    private fun observeTracks() {
+        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+            binding.recyclerViewTrack.adapter = TrackAdapter(tracks) { trackId ->
+                viewModel.followTrack(trackId, accessToken)
+            }
+            binding.recyclerViewTrack.apply {
+                set3DItem(true)
+                setAlpha(true)
+            }
+        }
+    }
+
+    private fun observeResult() {
+        viewModel.result.observe(viewLifecycleOwner) { result ->
+            val message = when (result) {
+                R.string.playlist_followed_successfully -> {
+                    SuccessDialogFragment(isTrackAction = false).show(
+                        parentFragmentManager,
+                        SUCCESS
+                    )
+                    null
+                }
+
+                R.string.track_followed_successfully -> {
+                    SuccessDialogFragment(isTrackAction = true).show(
+                        parentFragmentManager,
+                        SUCCESS
+                    )
+                    null
+                }
+
+                else -> result
+            }
+            message?.let { requireContext().showToast(getString(it)) }
         }
     }
 }
