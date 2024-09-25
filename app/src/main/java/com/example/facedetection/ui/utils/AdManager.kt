@@ -1,6 +1,7 @@
 package com.example.facedetection.ui.utils
 
 import android.app.Activity
+import com.example.facedetection.BuildConfig.AD_UNIT_ID
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
@@ -11,7 +12,7 @@ class AdManager(private val activity: Activity) {
 
     fun loadRewardedAd() {
         val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(activity, "ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+        RewardedAd.load(activity, AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
             override fun onAdLoaded(ad: RewardedAd) {
                 rewardedAd = ad
             }

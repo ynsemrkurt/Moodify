@@ -26,6 +26,8 @@ android {
         buildConfigField("String", "REDIRECT_URI", properties.getProperty("REDIRECT_URI"))
         buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
+        buildConfigField("String", "AD_UNIT_ID", properties.getProperty("AD_UNIT_ID"))
+        resValue("string", "AD_VALUE", properties.getProperty("AD_VALUE"))
     }
 
     buildTypes {
