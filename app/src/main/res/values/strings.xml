@@ -24,7 +24,7 @@
     <string name="play_playlist">Play Playlist</string>
     <string name="playlist_followed_successfully">Playlist followed successfully</string>
     <string name="failed_to_follow_playlist">Failed to follow playlist</string>
-    <string name="successful_text">Your playlist has been added to your library.\nWould you like to open your library?</string>4
+    <string name="successful_text">Your playlist has been added to your library.\nWould you like to open your library?</string>
     <string name="successful_track_text">The track has been added to your favorites.\nWould you like to open your liked songs?</string>
     <string name="stay_in_moodify">Stay in Moodify</string>
     <string name="open_in_spotify">Open in Spotify</string>

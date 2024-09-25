@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:contentDescription="@string/welcome_image"
-        android:scaleType="centerCrop"
-        android:src="@drawable/note"
+        android:padding="@dimen/spacer_16"
+        android:src="@drawable/moodify_logo"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +75,7 @@
         android:layout_marginBottom="@dimen/spacer_16"
         app:cardBackgroundColor="?backgroundColor"
         app:cardElevation="@dimen/spacer_16"
+        app:strokeColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
