@@ -81,7 +81,6 @@ class MoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adManager = AdManager(requireActivity())
-        adManager.loadRewardedAd()
         setupListeners()
         observeViewModel()
     }
@@ -109,7 +108,7 @@ class MoodFragment : Fragment() {
 
     private fun checkStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            adManager.showAdIfAvailable {
+            adManager.loadRewardedAd {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
         } else {
@@ -125,14 +124,16 @@ class MoodFragment : Fragment() {
     }
 
     private fun openCamera() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(FRONT_CAMERA, 1)
+        adManager.loadRewardedAd {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                putExtra(FRONT_CAMERA, 1)
+            }
+            resultLauncher.launch(takePictureIntent)
         }
-        resultLauncher.launch(takePictureIntent)
     }
 
     private fun openGallery() {
-        adManager.showAdIfAvailable {
+        adManager.loadRewardedAd {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
         }
