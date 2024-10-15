@@ -22,6 +22,10 @@ import com.example.facedetection.ui.utils.Permission.SUCCESS
 import com.example.facedetection.ui.utils.Spotify
 import com.example.facedetection.ui.utils.showToast
 import com.example.facedetection.ui.viewModel.ListViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ListFragment : Fragment() {
 
@@ -41,6 +45,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        startShimmer()
         setMoodFace()
         searchList()
         searchTracks()
@@ -48,6 +53,22 @@ class ListFragment : Fragment() {
         observeResult()
         observeTracks()
     }
+
+    private fun startShimmer() {
+        binding.scrollView2.visibility = View.INVISIBLE
+        binding.shimmerContainer.visibility = View.VISIBLE
+        binding.shimmerContainer.startShimmer()
+    }
+
+    private fun stopShimmer() {
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(2000)
+            binding.scrollView2.visibility = View.VISIBLE
+            binding.shimmerContainer.visibility = View.GONE
+            binding.shimmerContainer.stopShimmer()
+        }
+    }
+
 
     private fun setMoodFace() {
         mood = arguments?.getString(Mood.MOOD).toString()
@@ -90,6 +111,7 @@ class ListFragment : Fragment() {
                 set3DItem(true)
                 setAlpha(true)
             }
+            stopShimmer()
         }
     }
 
