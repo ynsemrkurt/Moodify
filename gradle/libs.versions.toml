@@ -5,7 +5,7 @@ browser = "1.8.0"
 carouselrecyclerview = "1.2.6"
 circleimageview = "3.1.0"
 faceDetection = "16.1.7"
-fragmentKtx = "1.8.3"
+fragmentKtx = "1.8.4"
 glide = "4.16.0"
 kotlin = "1.9.24"
 coreKtx = "1.13.1"
@@ -18,8 +18,9 @@ lottie = "6.5.2"
 material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
-playServicesAds = "23.3.0"
+playServicesAds = "23.4.0"
 retrofit = "2.11.0"
+shimmer = "0.5.0"
 
 [libraries]
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
@@ -43,6 +44,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -76,4 +76,5 @@ dependencies {
     implementation(libs.carouselrecyclerview)
     implementation(libs.play.services.ads)
     implementation(files("libs/spotify-app-remote-release-0.8.0.aar"))
+    implementation(libs.shimmer)
 }
