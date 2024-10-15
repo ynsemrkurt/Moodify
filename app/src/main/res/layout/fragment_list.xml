@@ -7,8 +7,10 @@
     tools:context=".ui.fragment.ListFragment">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -66,8 +68,8 @@
                 android:id="@+id/textViewTrack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacer_8"
                 android:layout_marginStart="@dimen/spacer_16"
+                android:layout_marginTop="@dimen/spacer_8"
                 android:text="@string/track"
                 android:textSize="@dimen/text_size_24"
                 android:textStyle="bold"
@@ -112,5 +114,134 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_auto_start="true"
+        tools:visibility="visible">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/titleTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacer_32"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/text_size_24"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/spacer_16"
+                    android:layout_marginHorizontal="@dimen/spacer_16"
+                    app:layout_constraintDimensionRatio="3:2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView2">
+
+                    <ImageView
+                        android:id="@+id/imageViewFace2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/mood"
+                        android:elevation="@dimen/spacer_16"
+                        android:src="@drawable/sad_face"
+                        app:tint="@color/hint"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:elevation="@dimen/spacer_8"
+                        android:padding="@dimen/spacer_8"
+                        android:contentDescription="@string/mood"
+                        android:src="@drawable/sad_face"
+                        app:tint="@color/hint"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textViewTrack2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacer_16"
+                    android:layout_marginTop="@dimen/spacer_8"
+                    android:text="@string/track"
+                    android:textSize="@dimen/text_size_24"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/recyclerViewTrack2"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+                <LinearLayout
+                    android:id="@+id/recyclerViewTrack2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewTrack2">
+
+                    <include layout="@layout/item_track_fake"/>
+
+                    <include layout="@layout/item_track_fake"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewPlaylist2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacer_16"
+                    android:text="@string/playlist"
+                    android:textSize="@dimen/text_size_24"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/recyclerViewPlayList2"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewTrack2" />
+
+                <LinearLayout
+                    android:id="@+id/recyclerViewPlayList2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewPlaylist2">
+
+                    <include layout="@layout/item_playlist_fake"/>
+
+                    <include layout="@layout/item_playlist_fake"/>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
