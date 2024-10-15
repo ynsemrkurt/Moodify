@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacer_16"
+    android:layout_marginVertical="@dimen/spacer_8"
+    app:cardBackgroundColor="?backgroundColor">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/spacer_8"
+            app:cardCornerRadius="@dimen/spacer_8"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:background="@color/hint"
+                android:id="@+id/imageViewList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/play_list_image"
+                android:scaleType="centerCrop"
+                tools:ignore="ImageContrastCheck" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textViewListName"
+            android:layout_width="0dp"
+            android:background="@color/hint"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/spacer_16"
+            android:layout_marginTop="@dimen/spacer_8"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_size_22"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewList" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="@dimen/spacer_32"
+            android:layout_height="@dimen/spacer_32"
+            android:layout_marginTop="@dimen/spacer_10"
+            android:foreground="@color/hint"
+            app:layout_constraintStart_toStartOf="@+id/textViewListName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewListName" />
+
+        <TextView
+            android:id="@+id/textViewListArtist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacer_8"
+            android:layout_marginBottom="@dimen/spacer_4"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:background="@color/hint"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewProfile"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonAdd"
+            app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+            app:layout_constraintTop_toTopOf="@+id/imageViewProfile" />
+
+        <ImageView
+            android:id="@+id/imageViewSpotify"
+            android:layout_width="@dimen/spacer_64"
+            android:layout_height="@dimen/spacer_32"
+            android:layout_marginVertical="@dimen/spacer_8"
+            android:contentDescription="@string/spotify"
+            android:background="@color/hint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageViewProfile"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewProfile"
+            app:tint="@color/green" />
+
+        <ImageButton
+            android:id="@+id/imageButtonPlay"
+            android:layout_width="@dimen/spacer_64"
+            android:layout_height="@dimen/spacer_64"
+            android:layout_margin="@dimen/spacer_8"
+            android:background="@color/hint"
+            android:contentDescription="@string/play_playlist"
+            android:padding="@dimen/spacer_2"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white" />
+
+        <ImageButton
+            android:id="@+id/imageButtonAdd"
+            android:layout_width="@dimen/spacer_64"
+            android:layout_height="@dimen/spacer_64"
+            android:layout_margin="@dimen/spacer_8"
+            android:background="@color/hint"
+            android:contentDescription="@string/play_playlist"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonPlay"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
